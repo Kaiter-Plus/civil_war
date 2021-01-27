@@ -1,21 +1,16 @@
 <template>
   <el-container class="main-view">
-    <game-logo :url="logoSrc" />
+    <game-logo />
     <button-group />
   </el-container>
 </template>
 
 <script>
-  import GameLogo from 'components/mainview/GameLogo'
-  import ButtonGroup from 'components/mainview/ButtonGroup'
+  import GameLogo from 'components/content/mainview/GameLogo'
+  import ButtonGroup from 'components/content/mainview/ButtonGroup'
 
   export default {
     name: 'MainView',
-    data() {
-      return {
-        logoSrc: 'img/logo.png'
-      }
-    },
     components: {
       GameLogo,
       ButtonGroup
