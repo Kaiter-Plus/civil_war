@@ -31,7 +31,7 @@
       }
     },
     created() {
-      // 获取 konwledge 数据
+      // 获取数据
       const url = '/data.json'
       request(url).then(res => {
         this.rules = res.rules
