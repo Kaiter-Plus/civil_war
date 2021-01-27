@@ -2,7 +2,7 @@
   <el-row id="app" class="app">
     <!-- begin:主容器开始 -->
     <el-col class="container" :span="24" :lg="{span: 8, offset: 8}">
-      <router-view :knowledge="knowledge" />
+      <router-view :rules="rules" :rumors="rumors" :knowledge="knowledge" />
     </el-col>
     <!-- end:主容器结束 -->
     <!-- begin:游戏背景容器 -->
@@ -25,14 +25,18 @@
     name: 'app',
     data() {
       return {
-        knowledge: []
+        rules: [],
+        knowledge: [],
+        rumors: []
       }
     },
     created() {
       // 获取 konwledge 数据
-      const url = '/knowledge.json'
+      const url = '/data.json'
       request(url).then(res => {
-        this.knowledge = res
+        this.rules = res.rules
+        this.rumors = res.rumors
+        this.knowledge = res.knowledge
       }).catch(e => {
         console.log(e)
       })
