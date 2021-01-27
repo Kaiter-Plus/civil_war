@@ -1,6 +1,6 @@
 [
-  "<li class='list-group-item list-group-item-primary'>游戏规则很简单，控制人物消灭病毒</li>",
-  "<li class='list-group-item list-group-item-info'>PC端使用鼠标移动控制人物的移动，移动端滑动屏幕控制人物的移动</li>",
-  "<li class='list-group-item list-group-item-dark'>分数：消灭一个病毒 +1000分，看看你能消灭多少病毒吧！</li>",
-  "<li class='list-group-item list-group-item-success'>每次游戏结束都会给一个防疫小知识，让我们一起消灭新冠病毒吧！</li>"
+  "游戏规则很简单，控制人物消灭病毒",
+  "PC端使用鼠标移动控制人物的移动，移动端滑动屏幕控制人物的移动",
+  "分数：消灭一个病毒 +1000分，看看你能消灭多少病毒吧！",
+  "每次游戏结束都会给一个防疫小知识，让我们一起消灭新冠病毒吧！"
 ]
