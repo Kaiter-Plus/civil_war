@@ -1,10 +1,10 @@
 <template>
   <el-main class="button-group">
-    <el-button v-for="button in buttonGroup" :type="button.type" round :key="button">
-      {{button.text}}
+    <el-button v-for="button in buttonGroup" :type="button.type" round :key="button.text" @click="showDialog"
+      :value="button.text">
+      {{ button.text }}
     </el-button>
   </el-main>
-
 </template>
 
 <script>
@@ -12,6 +12,11 @@
     name: 'ButtonGroup',
     props: {
       buttonGroup: Array
+    },
+    methods: {
+      showDialog(e) {
+        this.$emit('showDialog', e.target)
+      }
     }
   }
 </script>

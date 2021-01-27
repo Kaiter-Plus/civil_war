@@ -1,7 +1,7 @@
 <template>
   <el-container class="main-view">
     <game-logo />
-    <button-group :buttonGroup="buttonGroup" />
+    <button-group :buttonGroup="buttonGroup" @showDialog="showDialog" />
   </el-container>
 </template>
 
@@ -25,6 +25,11 @@
       knowledge: Array,
       rules: Array,
       rumors: Array
+    },
+    methods: {
+      showDialog(target) {
+        console.log(target)
+      }
     },
     components: {
       GameLogo,
