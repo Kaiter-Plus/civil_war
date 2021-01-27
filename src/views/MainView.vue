@@ -11,6 +11,11 @@
 
   export default {
     name: 'MainView',
+    props: {
+      knowledge: Array,
+      rules: Array,
+      rumors: Array
+    },
     components: {
       GameLogo,
       ButtonGroup
