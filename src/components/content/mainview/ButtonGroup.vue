@@ -1,16 +1,18 @@
 <template>
   <el-main class="button-group">
-    <el-button type="success" round>开始游戏</el-button>
-    <el-button type="primary" round>查看规则</el-button>
-    <el-button type="warning" round>防疫小知识</el-button>
-    <el-button type="danger" round>谣言我先知</el-button>
+    <el-button v-for="button in buttonGroup" :type="button.type" round :key="button">
+      {{button.text}}
+    </el-button>
   </el-main>
 
 </template>
 
 <script>
   export default {
-    name: 'ButtonGroup'
+    name: 'ButtonGroup',
+    props: {
+      buttonGroup: Array
+    }
   }
 </script>
 

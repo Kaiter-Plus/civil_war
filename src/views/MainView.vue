@@ -1,7 +1,7 @@
 <template>
   <el-container class="main-view">
     <game-logo />
-    <button-group />
+    <button-group :buttonGroup="buttonGroup" />
   </el-container>
 </template>
 
@@ -11,6 +11,16 @@
 
   export default {
     name: 'MainView',
+    data() {
+      return {
+        buttonGroup: [
+          { type: 'success', text: '开始游戏' },
+          { type: 'primary', text: '查看规则' },
+          { type: 'warning', text: '防疫小知识' },
+          { type: 'danger', text: '谣言我先知' }
+        ]
+      }
+    },
     props: {
       knowledge: Array,
       rules: Array,
