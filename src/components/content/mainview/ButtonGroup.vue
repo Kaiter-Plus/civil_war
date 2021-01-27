@@ -15,7 +15,7 @@
     },
     methods: {
       showDialog(e) {
-        this.$emit('showDialog', e.target)
+        this.$emit('showDialog', { target: e.target })
       }
     }
   }

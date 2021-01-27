@@ -27,8 +27,8 @@
       rumors: Array
     },
     methods: {
-      showDialog(target) {
-        console.log(target)
+      showDialog(payload) {
+        console.log(payload.target)
       }
     },
     components: {
