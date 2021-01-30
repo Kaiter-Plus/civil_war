@@ -57,9 +57,7 @@
           rules: false,
           knowledge: false,
           rumor: false
-        },
-        message: '',
-        title: '123'
+        }
       }
     },
     props: {
@@ -71,6 +69,9 @@
       // 展示信息框
       showDialog(id) {
         switch (id) {
+          case 0:
+            this.$router.push('/gameview')
+            break
           case 1:
             this.show.rules = true
             break
@@ -79,6 +80,8 @@
             break
           case 3:
             this.show.rumor = true
+            break
+          default:
             break
         }
       },
