@@ -66,7 +66,9 @@
       z-index: -2;
     }
     .container {
-      border: 0.3125rem solid #f0f0f0;
+      @media screen and (min-width: 1200px) {
+        border: 0.0625rem solid #f0f0f0;
+      }
       overflow: hidden;
     }
     .el-dialog {
