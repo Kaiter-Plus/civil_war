@@ -69,5 +69,10 @@
       border: 0.3125rem solid #f0f0f0;
       overflow: hidden;
     }
+    .el-dialog {
+      @media screen and (min-width: 1200px) {
+        width: 30% !important;
+      }
+    }
   }
 </style>
