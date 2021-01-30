@@ -97,26 +97,17 @@ body {
   color: blue
 }
 
-/* 高斯模糊背景以及黑色透明遮罩 */
-.mask_bg,
-.mask {
+/* 高斯模糊背景 */
+.mask_bg {
   position: absolute;
   height: 100%;
   width: 100%;
   top: 0;
-  left: 0
-}
-
-.mask_bg {
+  left: 0;
   z-index: -2;
   background: url(../res/bg.jpeg) no-repeat 0 0;
   background-size: cover;
-  filter: blur(20px)
-}
-
-.mask {
-  z-index: -1;
-  background-color: rgba(0, 0, 0, .35)
+  filter: blur(15px) grayscale(.3);
 }
 
 /* 动画列表 */
