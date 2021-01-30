@@ -15,6 +15,6 @@
     width: 100%;
     background: url(@background-url) no-repeat 0 0;
     background-size: cover;
-    filter: blur(20px);
+    filter: blur(15px) grayscale(0.3);
   }
 </style>

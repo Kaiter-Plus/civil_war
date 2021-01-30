@@ -9,7 +9,8 @@
 
     <!-- begin:游戏规则 -->
     <el-dialog class="rules-dialog" title="游戏规则" :visible.sync="show.rules" width="90%">
-      <el-alert v-for="(rule, index) in rules" :title="rule" :type="alertType[index]" :closable="false" :key="rule" />
+      <el-alert v-for="(rule, index) in data.rules" :title="rule" :type="alertType[index]" :closable="false"
+        :key="rule" />
       <span slot="footer">
         <el-button type="primary" @click="show.rules = false">我知道了</el-button>
       </span>
@@ -61,9 +62,7 @@
       }
     },
     props: {
-      rules: Array,
-      knowledge: Array,
-      rumors: Array
+      data: Object
     },
     methods: {
       // 展示信息框
@@ -87,12 +86,11 @@
       },
       // 获取一个防疫小知识
       getKnowledgeItem() {
-        console.log(1)
-        return this.knowledge[this.randomIndex(this.knowledge.length)]
+        return this.data.knowledge[this.randomIndex(this.data.knowledge.length)]
       },
       // 获取一个谣言
       getrumor() {
-        return this.rumors[this.randomIndex(this.rumors.length)]
+        return this.data.rumors[this.randomIndex(this.data.rumors.length)]
       },
       // 产生随机数
       randomIndex(end, start = 0) {

@@ -1,6 +1,6 @@
 <template>
   <div class="game-view">
-    {{knowledge}}
+    {{data.knowledge}}
   </div>
 </template>
 
@@ -8,10 +8,7 @@
   export default {
     name: 'GameView',
     props: {
-      knowledge: Array
-    },
-    created() {
-      console.log(this.knowledge)
+      data: Object
     }
   }
 </script>
