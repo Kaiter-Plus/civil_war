@@ -72,5 +72,8 @@
         width: 30% !important;
       }
     }
+    .el-alert {
+      margin: 5px 0;
+    }
   }
 </style>
