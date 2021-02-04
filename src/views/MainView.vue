@@ -17,7 +17,7 @@
     </el-dialog>
     <!-- end:游戏规则 -->
 
-    <!-- begin: 防疫小知识-->
+    <!-- begin:防疫小知识-->
     <el-dialog class="knowledge-dialog" title="防疫小知识" :visible.sync="show.knowledge" width="90%">
       <el-alert :title="getKnowledgeItem()" type="success" :closable="false" />
       <span slot="footer">
@@ -26,7 +26,7 @@
     </el-dialog>
     <!-- end:防疫小知识 -->
 
-    <!-- begin: 谣言我先知-->
+    <!-- begin:谣言我先知-->
     <el-dialog class="rumors-dialog" title="谣言我先知" :visible.sync="show.rumor" width="90%">
       <el-alert v-for="(rumor, index) in getrumor()" :title="rumor" :type="alertType[index]" :closable="false"
         :key="rumor" />
