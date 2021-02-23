@@ -19,7 +19,6 @@
 
   // 导入组件
   import BackGround from 'views/BackGround'
-  import MainView from 'views/MainView'
 
   export default {
     name: 'app',
@@ -39,8 +38,7 @@
 
     },
     components: {
-      BackGround,
-      MainView
+      BackGround
     }
   }
 </script>
