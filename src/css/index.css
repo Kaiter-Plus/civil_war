@@ -1,6 +1,9 @@
+@import 'normalize.css';
+@import 'minireset.css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
 body {
   overflow: hidden;
-  font-family: microsoft yahei, sans-serif
+  font-family: microsoft yahei, sans-serif;
 }
 
 /* 游戏容器*/
@@ -14,7 +17,7 @@ body {
   position: absolute;
   overflow: hidden;
   border: 10px solid #f0f0f0;
-  padding: 0
+  padding: 0;
 }
 
 /* ready go!  */
@@ -22,12 +25,13 @@ body {
   user-select: none;
   text-align: center;
   font-size: 1em;
-  color: red
+  color: red;
 }
 
 /* 按键 */
 #stage .buttonGroup a {
-  margin-top: 30px
+  margin-top: 30px;
+  width: 100%;
 }
 
 /* 救护车 */
@@ -35,30 +39,30 @@ body {
   width: 30px;
   height: 64px;
   position: absolute;
-  background: url('../res/img/ambulance.png') center no-repeat;
+  background: url(../img/ambulance.png) center no-repeat;
   background-size: auto;
-  z-index: 3
+  z-index: 3;
 }
 
 /* 胶囊 */
 #stage .capsule {
   width: 14px;
   height: 26px;
-  background: url('../res/img/capsule.png');
+  background: url(../img/capsule.png);
   position: absolute;
-  z-index: 2
+  z-index: 2;
 }
 
 /* 病毒 */
 #stage .virus {
   width: 64px;
   height: 64px;
-  background: url('../res/img/virus.png');
+  background: url(../img/virus.png);
   position: absolute;
   transform: rotate(0);
   animation: virusRetate 2s linear infinite;
   -webkit-animation: virusRetate 2s linear infinite;
-  z-index: 3
+  z-index: 3;
 }
 
 /* 分数 */
@@ -73,7 +77,7 @@ body {
   font-weight: bold;
   padding-left: 5px;
   font-size: 16px;
-  z-index: 5
+  z-index: 5;
 }
 
 /* 结算 */
@@ -81,7 +85,7 @@ body {
   text-align: center;
   line-height: 40px;
   padding: 10px;
-  z-index: 4
+  z-index: 4;
 }
 
 /* 结算信息 */
@@ -94,7 +98,7 @@ body {
 #stage .tips .s {
   padding: 2px 10px;
   font-weight: bold;
-  color: blue
+  color: blue;
 }
 
 /* 高斯模糊背景 */
@@ -105,22 +109,13 @@ body {
   top: 0;
   left: 0;
   z-index: -2;
-  background: url(../res/bg.jpeg) no-repeat 0 0;
+  background: url(../img/bg.jpeg) no-repeat 0 0;
   background-size: cover;
-  filter: blur(15px) grayscale(.3);
+  filter: blur(15px) grayscale(0.3);
 }
 
 /* 动画列表 */
 @keyframes virusRetate {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@-webkit-keyframes virusRetate {
   from {
     transform: rotate(0);
   }
