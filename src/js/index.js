@@ -54,28 +54,28 @@ const game = {
       case 0:
         tip.html(
           `您获得了<span class='s'>${score.html()}</span>分
-          <br />不要气馁，继续努力！<br />
+          <br />不要气馁，继续努力!<br />
           <p class='btn btn-block btn-lg btn-primary col-10 offset-1'>继续消灭</p>`,
         );
         break;
       case 1:
         tip.html(
           `您获得了<span class='s'>${score.html()}</span>分
-          <br />坚持就是胜利！<br />
+          <br />坚持就是胜利!<br />
           <p class='btn btn-block btn-lg btn-primary'>继续消灭</p>`,
         );
         break;
       case 2:
         tip.html(
           `您获得了<span class='s'>${score.html()}</span>分
-          <br />离消灭病毒只剩一点点了！<br />
+          <br />离消灭病毒只剩一点点了!<br />
           <p class='btn btn-block btn-lg btn-primary'>继续消灭</p>`,
         );
         break;
       default:
         tip.html(
           `恭喜您成功获得了<span class='s'>${score.html()}</span>分
-          <br />病毒已经消灭，感谢您为消灭病毒做出的努力！<br />
+          <br />病毒已经消灭，感谢您为消灭病毒做出的努力!<br />
           <p class='btn btn-block btn-lg btn-primary'>继续消灭</p>`,
         );
     }
