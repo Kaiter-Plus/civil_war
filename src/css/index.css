@@ -1,6 +1,6 @@
 @import 'normalize.css';
-@import 'minireset.css';
-@import '~bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
 body {
   overflow: hidden;
   font-family: microsoft yahei, sans-serif;
@@ -39,7 +39,7 @@ body {
   width: 30px;
   height: 64px;
   position: absolute;
-  background: url(../img/ambulance.png) center no-repeat;
+  background: url('../img/ambulance.png') center no-repeat;
   background-size: auto;
   z-index: 3;
 }
@@ -48,7 +48,7 @@ body {
 #stage .capsule {
   width: 14px;
   height: 26px;
-  background: url(../img/capsule.png);
+  background: url('../img/capsule.png');
   position: absolute;
   z-index: 2;
 }
@@ -57,7 +57,7 @@ body {
 #stage .virus {
   width: 64px;
   height: 64px;
-  background: url(../img/virus.png);
+  background: url('../img/virus.png');
   position: absolute;
   transform: rotate(0);
   animation: virusRetate 2s linear infinite;
@@ -109,7 +109,7 @@ body {
   top: 0;
   left: 0;
   z-index: -2;
-  background: url(../img/bg.jpeg) no-repeat 0 0;
+  background: url('../img/bg.jpeg') no-repeat 0 0;
   background-size: cover;
   filter: blur(15px) grayscale(0.3);
 }
