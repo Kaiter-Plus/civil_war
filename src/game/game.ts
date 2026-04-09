@@ -197,9 +197,8 @@ export class Game {
     // Ready -> GO 动画（用 canvas 绘制）
     audioManager.play('button');
     audioManager.play('start');
-    audioManager.setVolume('shot', 0.4);
 
-    this.timers.backgroundMusic = setTimeout(() => audioManager.play('bgMusic'), 2000);
+    this.timers.backgroundMusic = setTimeout(() => audioManager.fadeInBgMusic(2000), 1500);
 
     let readyPhase = 'ready';
     let fontSize = 16;
@@ -423,7 +422,7 @@ export class Game {
     this.state = 'over';
     this.stage.style.cursor = 'default';
     audioManager.play('gameOver');
-    audioManager.pause('bgMusic');
+    audioManager.fadeOutBgMusic(600);
 
     // 停止游戏循环
     cancelAnimationFrame(this.gameLoopRAF);
