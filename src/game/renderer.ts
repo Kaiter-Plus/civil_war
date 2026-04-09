@@ -226,7 +226,7 @@ export class Renderer {
   }
 
   /** 绘制分数 + 连杀信息 */
-  drawScore(score: number, combo: number, level: number): void {
+  drawScore(score: number, combo: number, level: number, hasDoubleFire: boolean = false): void {
     // 分数
     this.ctx.font = 'bold 18px "Microsoft YaHei", sans-serif';
     this.ctx.fillStyle = '#fff';
@@ -251,11 +251,15 @@ export class Renderer {
       this.ctx.globalAlpha = 1;
     }
 
-    // 当前难度等级
+    // 当前难度等级 + 角色加强状态
     this.ctx.font = '12px "Microsoft YaHei", sans-serif';
     this.ctx.fillStyle = 'rgba(255,255,255,0.5)';
     this.ctx.textAlign = 'left';
-    this.ctx.fillText(`难度 Lv.${level}`, 15, 40);
+    let statusText = `难度 Lv.${level}`;
+    if (hasDoubleFire) {
+      statusText += ' ⚡双发';
+    }
+    this.ctx.fillText(statusText, 15, 40);
   }
 
   /** 绘制 Ready/GO 文字 */

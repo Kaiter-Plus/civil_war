@@ -87,3 +87,13 @@ export const difficulties: Record<DifficultyName, DifficultyConfig> = {
     intervalFloor: 200,
   },
 };
+
+/** 角色升级配置 - 每 3 级触发加强 */
+export const playerUpgrade = {
+  levelStep: 3,           // 每 3 级触发一次
+  fireRateBonus: 0.08,    // 射击间隔减少 8%
+  speedBonus: 0.08,       // 飞行时间减少 8%（速度提升）
+  fireRateMin: 120,       // 射击间隔下限 120ms
+  speedMin: 800,          // 飞行时间下限 800ms（最快）
+  doubleFireLevel: 10,    // 10 级获得双发能力
+};

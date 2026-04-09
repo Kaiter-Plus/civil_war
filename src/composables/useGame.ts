@@ -1,6 +1,6 @@
 import { ref, reactive, shallowRef, onUnmounted } from 'vue';
 import type { DifficultyName, CapsuleEntity, VirusEntity, Particle, ScorePopup } from '../game/types';
-import { difficulties, data, audio as audioSrc, images as imageSrcs } from '../game/config';
+import { difficulties, playerUpgrade, data, audio as audioSrc, images as imageSrcs } from '../game/config';
 import { audioManager } from '../game/audio';
 import { Renderer } from '../game/renderer';
 import { randomInt, clamp } from '../game/utils';
@@ -49,10 +49,15 @@ export function useGame(options: {
   const particles = reactive<Particle[]>([]);
   const scorePopups = reactive<ScorePopup[]>([]);
 
-  // 动态难度参数
+  // 动态难度参数（病毒）
   const currentInterval = ref(0);
   const currentSpeedMin = ref(0);
   const currentSpeedMax = ref(0);
+
+  // 动态胶囊参数（角色加强）
+  const currentCapsuleInterval = ref(0);
+  const currentCapsuleSpeed = ref(0);
+  const hasDoubleFire = ref(false);
 
   // 救护车位置
   const ambulanceX = ref(0);
@@ -111,11 +116,16 @@ export function useGame(options: {
     particles.length = 0;
     scorePopups.length = 0;
 
-    // 重置动态难度
+    // 重置动态难度（病毒）
     const cfg = difficulties[diff];
     currentInterval.value = cfg.virusInterval;
     currentSpeedMin.value = cfg.virusSpeedMin;
     currentSpeedMax.value = cfg.virusSpeedMax;
+
+    // 重置动态胶囊参数（角色）
+    currentCapsuleInterval.value = cfg.capsuleInterval;
+    currentCapsuleSpeed.value = cfg.capsuleSpeed;
+    hasDoubleFire.value = false;
 
     // 初始救护车位置
     ambulanceX.value = width / 2;
@@ -164,11 +174,11 @@ export function useGame(options: {
 
     const config = difficulties[difficulty.value];
 
-    // 生成胶囊
+    // 生成胶囊（使用动态参数）
     capsuleAccum += dt;
-    while (capsuleAccum >= config.capsuleInterval) {
-      spawnCapsule(config.capsuleSpeed);
-      capsuleAccum -= config.capsuleInterval;
+    while (capsuleAccum >= currentCapsuleInterval.value) {
+      spawnCapsule(currentCapsuleSpeed.value, hasDoubleFire.value);
+      capsuleAccum -= currentCapsuleInterval.value;
     }
 
     // 生成病毒
@@ -190,16 +200,26 @@ export function useGame(options: {
     gameLoopRAF = requestAnimationFrame(gameLoop);
   }
 
-  function spawnCapsule(speed: number) {
+  function spawnCapsule(speed: number, doubleFire: boolean = false) {
     if (!renderer.value) return;
     audioManager.play('shot');
     const { height } = renderer.value.getSize();
-    capsules.push({
-      x: ambulanceX.value,
-      y: ambulanceY.value - 13,
-      vy: -(height + 26) / speed,
-      active: true,
-    });
+    const vy = -(height + 26) / speed;
+
+    if (doubleFire) {
+      // 双发：左右各一颗
+      capsules.push(
+        { x: ambulanceX.value - 15, y: ambulanceY.value - 13, vy, active: true },
+        { x: ambulanceX.value + 15, y: ambulanceY.value - 13, vy, active: true }
+      );
+    } else {
+      capsules.push({
+        x: ambulanceX.value,
+        y: ambulanceY.value - 13,
+        vy,
+        active: true,
+      });
+    }
   }
 
   function spawnVirus(speedMin: number, speedMax: number) {
@@ -376,9 +396,27 @@ export function useGame(options: {
     if (newLevel > level.value) {
       level.value = newLevel;
       const steps = newLevel - 1;
+
+      // 病毒难度升级
       currentInterval.value = Math.max(cfg.intervalFloor, cfg.virusInterval - cfg.accelInterval * steps);
       currentSpeedMin.value = Math.max(500, cfg.virusSpeedMin - cfg.accelSpeedMin * steps);
       currentSpeedMax.value = Math.max(1000, cfg.virusSpeedMax - cfg.accelSpeedMax * steps);
+
+      // 角色加强（每 levelStep 级触发）
+      const upgradeSteps = Math.floor(newLevel / playerUpgrade.levelStep);
+      if (upgradeSteps > 0) {
+        // 射击间隔减少
+        const fireRateMultiplier = Math.pow(1 - playerUpgrade.fireRateBonus, upgradeSteps);
+        currentCapsuleInterval.value = Math.max(playerUpgrade.fireRateMin, cfg.capsuleInterval * fireRateMultiplier);
+        // 飞行时间减少（速度提升）
+        const speedMultiplier = Math.pow(1 - playerUpgrade.speedBonus, upgradeSteps);
+        currentCapsuleSpeed.value = Math.max(playerUpgrade.speedMin, cfg.capsuleSpeed * speedMultiplier);
+      }
+
+      // 双发能力
+      if (newLevel >= playerUpgrade.doubleFireLevel && !hasDoubleFire.value) {
+        hasDoubleFire.value = true;
+      }
     }
   }
 
@@ -435,7 +473,7 @@ export function useGame(options: {
     for (const v of viruses) renderer.value.drawVirus(v);
     renderer.value.drawParticles(particles);
     renderer.value.drawScorePopups(scorePopups);
-    renderer.value.drawScore(score.value, combo.value, level.value);
+    renderer.value.drawScore(score.value, combo.value, level.value, hasDoubleFire.value);
   }
 
   function handleMove(clientX: number, clientY: number) {
@@ -495,5 +533,8 @@ export function useGame(options: {
     combo,
     maxCombo,
     level,
+    hasDoubleFire,
+    currentCapsuleInterval,
+    currentCapsuleSpeed,
   };
 }
