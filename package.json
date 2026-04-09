@@ -13,7 +13,6 @@
   "description": "全民战疫 - 飞机大战类型游戏",
   "dependencies": {
     "bootstrap": "^5.3.8",
-    "jquery": "^4.0.0",
     "normalize.css": "^8.0.1"
   },
   "devDependencies": {

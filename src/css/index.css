@@ -6,7 +6,7 @@ body {
   font-family: microsoft yahei, sans-serif;
 }
 
-/* 游戏容器*/
+/* 游戏容器 */
 #stage {
   height: 100%;
   display: flex;
@@ -20,12 +20,34 @@ body {
   padding: 0;
 }
 
-/* ready go!  */
+/* ready go! */
 #stage > #ready {
   user-select: none;
   text-align: center;
   font-size: 1em;
   color: red;
+  z-index: 10;
+  position: absolute;
+}
+
+/* 难度选择 */
+.difficultyGroup .btn-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.diff-btn {
+  flex: 1;
+  border-radius: 6px !important;
+  transition: all 0.2s;
+}
+
+.diff-btn.active-selected {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: #fff;
+  color: #fff;
+  font-weight: bold;
 }
 
 /* 按键 */
@@ -42,6 +64,7 @@ body {
   background: url('../img/ambulance.png') center no-repeat;
   background-size: auto;
   z-index: 3;
+  will-change: left, top;
 }
 
 /* 胶囊 */
@@ -60,8 +83,8 @@ body {
   background: url('../img/virus.png');
   position: absolute;
   transform: rotate(0);
-  animation: virusRetate 2s linear infinite;
-  -webkit-animation: virusRetate 2s linear infinite;
+  animation: virusRotate 2s linear infinite;
+  -webkit-animation: virusRotate 2s linear infinite;
   z-index: 3;
 }
 
@@ -78,6 +101,10 @@ body {
   padding-left: 5px;
   font-size: 16px;
   z-index: 5;
+}
+
+#stage .score.none {
+  display: none;
 }
 
 /* 结算 */
@@ -114,12 +141,8 @@ body {
   filter: blur(15px) grayscale(0.3);
 }
 
-/* 动画列表 */
-@keyframes virusRetate {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 动画 */
+@keyframes virusRotate {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
 }

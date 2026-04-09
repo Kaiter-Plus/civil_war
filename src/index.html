@@ -15,12 +15,12 @@
     </div>
     <div class="mask_bg"></div>
 
-    <!-- 显示模态框 -->
+    <!-- 模态框 -->
     <div class="modal fade" id="modal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel"></h5>
+            <h5 class="modal-title"></h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -32,30 +32,17 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- 音频文件 -->
-  <audio id="buttonDown" hidden="hidden" preload="auto">
-    <source type="audio/mpeg">
-  </audio>
-  <audio id="start" hidden="hidden" preload="auto">
-    <source type="audio/mpeg">
-  </audio>
-  <audio id="backgroundMusic" hidden="hidden" loop="loop" preload="auto">
-    <source type="audio/mpeg">
-  </audio>
-  <audio id="shot" hidden="hidden" preload="auto">
-    <source type="audio/mpeg">
-  </audio>
-  <audio id="killed" hidden="hidden" preload="auto">
-    <source type="audio/mpeg">
-  </audio>
-  <audio id="gameOver" hidden="hidden" preload="auto">
-    <source type="audio/mpeg">
-  </audio>
+  <audio id="audio-button" hidden preload="auto"><source type="audio/mpeg"></audio>
+  <audio id="audio-start" hidden preload="auto"><source type="audio/mpeg"></audio>
+  <audio id="audio-bgMusic" hidden loop preload="auto"><source type="audio/mpeg"></audio>
+  <audio id="audio-shot" hidden preload="auto"><source type="audio/mpeg"></audio>
+  <audio id="audio-killed" hidden preload="auto"><source type="audio/mpeg"></audio>
+  <audio id="audio-gameOver" hidden preload="auto"><source type="audio/mpeg"></audio>
 
-  <script type="module" src="./js/index.js"></script>
+  <script type="module" src="./game/index.ts"></script>
 </body>
 
 </html>
