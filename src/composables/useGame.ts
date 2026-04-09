@@ -473,7 +473,10 @@ export function useGame(options: {
     for (const v of viruses) renderer.value.drawVirus(v);
     renderer.value.drawParticles(particles);
     renderer.value.drawScorePopups(scorePopups);
-    renderer.value.drawScore(score.value, combo.value, level.value, hasDoubleFire.value);
+    
+    // 难度名称
+    const diffName = difficulty.value === 'easy' ? '简单' : difficulty.value === 'normal' ? '普通' : '困难';
+    renderer.value.drawScore(score.value, combo.value, diffName, level.value, hasDoubleFire.value);
   }
 
   function handleMove(clientX: number, clientY: number) {

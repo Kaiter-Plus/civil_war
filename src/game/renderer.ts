@@ -226,7 +226,7 @@ export class Renderer {
   }
 
   /** 绘制分数 + 连杀信息 */
-  drawScore(score: number, combo: number, level: number, hasDoubleFire: boolean = false): void {
+  drawScore(score: number, combo: number, difficultyName: string, level: number, hasDoubleFire: boolean = false): void {
     // 分数
     this.ctx.font = 'bold 18px "Microsoft YaHei", sans-serif';
     this.ctx.fillStyle = '#fff';
@@ -251,15 +251,28 @@ export class Renderer {
       this.ctx.globalAlpha = 1;
     }
 
-    // 当前难度等级 + 角色加强状态
+    // 左上角状态：难度名称 + 等级
     this.ctx.font = '12px "Microsoft YaHei", sans-serif';
-    this.ctx.fillStyle = 'rgba(255,255,255,0.5)';
     this.ctx.textAlign = 'left';
-    let statusText = `难度 Lv.${level}`;
+    
+    // 难度名称（带颜色）
+    const diffColors: Record<string, string> = {
+      '简单': '#4ade80',
+      '普通': '#60a5fa', 
+      '困难': '#f87171'
+    };
+    this.ctx.fillStyle = diffColors[difficultyName] || '#fff';
+    this.ctx.fillText(difficultyName, 15, 40);
+    
+    // 等级
+    this.ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    this.ctx.fillText(`  Lv.${level}`, 15 + this.ctx.measureText(difficultyName).width, 40);
+    
+    // 角色加强状态（第二行）
     if (hasDoubleFire) {
-      statusText += ' ⚡双发';
+      this.ctx.fillStyle = '#fbbf24';
+      this.ctx.fillText('⚡双发', 15, 56);
     }
-    this.ctx.fillText(statusText, 15, 40);
   }
 
   /** 绘制 Ready/GO 文字 */

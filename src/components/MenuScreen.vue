@@ -38,14 +38,34 @@ function setDifficulty(d: Difficulty) {
     <div class="w-[80%] max-w-[320px]">
       <div class="flex w-full gap-0.5">
         <button
-          v-for="d in (['easy', 'normal', 'hard'] as const)"
-          :key="d"
           type="button"
-          class="flex-1 py-2.5 border border-white/20 bg-white/10 text-white text-sm cursor-pointer transition-all duration-200 hover:bg-white/20 first:rounded-l-md last:rounded-r-md"
-          :class="{ 'bg-green-600 border-green-600 hover:bg-green-600': difficulty === d }"
-          @click="setDifficulty(d)"
+          class="flex-1 py-2.5 border-2 text-sm cursor-pointer transition-all duration-200 first:rounded-l-md last:rounded-r-md"
+          :class="difficulty === 'easy' 
+            ? 'bg-green-600 border-green-600 text-white' 
+            : 'border-green-600 text-green-400 hover:bg-green-600/20'"
+          @click="setDifficulty('easy')"
         >
-          {{ d === 'easy' ? '简单' : d === 'normal' ? '普通' : '困难' }}
+          简单
+        </button>
+        <button
+          type="button"
+          class="flex-1 py-2.5 border-2 text-sm cursor-pointer transition-all duration-200"
+          :class="difficulty === 'normal' 
+            ? 'bg-blue-600 border-blue-600 text-white' 
+            : 'border-blue-600 text-blue-400 hover:bg-blue-600/20'"
+          @click="setDifficulty('normal')"
+        >
+          普通
+        </button>
+        <button
+          type="button"
+          class="flex-1 py-2.5 border-2 text-sm cursor-pointer transition-all duration-200 first:rounded-l-md last:rounded-r-md"
+          :class="difficulty === 'hard' 
+            ? 'bg-red-600 border-red-600 text-white' 
+            : 'border-red-600 text-red-400 hover:bg-red-600/20'"
+          @click="setDifficulty('hard')"
+        >
+          困难
         </button>
       </div>
     </div>

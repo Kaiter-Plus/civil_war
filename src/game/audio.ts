@@ -56,7 +56,7 @@ class AudioManager {
     const start = performance.now();
     const fade = (now: number) => {
       const progress = Math.min((now - start) / duration, 1);
-      el.volume = target * progress;
+      el.volume = Math.max(0, Math.min(1, target * progress));
       if (progress < 1) requestAnimationFrame(fade);
     };
     requestAnimationFrame(fade);
@@ -74,7 +74,7 @@ class AudioManager {
     const start = performance.now();
     const fade = (now: number) => {
       const progress = Math.min((now - start) / duration, 1);
-      el.volume = startVolume * (1 - progress);
+      el.volume = Math.max(0, startVolume * (1 - progress));
       if (progress < 1) {
         this.fadeOutRAF = requestAnimationFrame(fade);
       } else {
