@@ -1,5 +1,11 @@
 /// <reference types="vite/client" />
 
+declare module '*.vue' {
+  import type { DefineVaporComponent } from 'vue';
+  const component: DefineVaporComponent<{}, {}, any>;
+  export default component;
+}
+
 declare module '*.png' {
   const src: string;
   export default src;

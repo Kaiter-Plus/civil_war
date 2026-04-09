@@ -17,7 +17,7 @@ body {
 }
 
 /* 游戏容器 - 固定 9:16 宽高比 */
-#stage {
+#app {
     position: relative;
     width: 100%;
     max-width: 450px;
@@ -30,11 +30,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 16px;
 }
 
 /* 游戏画布 */
-#stage canvas {
+#app canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -44,34 +43,34 @@ body {
 }
 
 /* 菜单层级在 canvas 之上 */
-#stage > .title,
-#stage > .difficultyGroup,
-#stage > .buttonGroup {
+#app > .title,
+#app > .difficultyGroup,
+#app > .buttonGroup {
     position: relative;
     z-index: 2;
 }
 
-#stage > .result-overlay {
+#app > .result-overlay {
     position: absolute;
     z-index: 10;
 }
 
-#stage > .title {
+#app > .title {
     margin-top: 15vh;
     margin-bottom: 20px;
 }
 
-#stage > .title img {
+#app > .title img {
     max-width: 200px;
     width: 100%;
 }
 
-#stage > .difficultyGroup {
+#app > .difficultyGroup {
     margin-bottom: 20px;
     width: 85%;
 }
 
-#stage > .buttonGroup {
+#app > .buttonGroup {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -205,7 +204,7 @@ body {
     color: #fff;
 }
 
-#stage .buttonGroup a {
+#app .buttonGroup a {
     width: 100%;
     text-decoration: none;
 }
@@ -544,7 +543,7 @@ body {
 
 /* 小屏幕：填满宽度 */
 @media (max-width: 449px) {
-    #stage {
+    #app {
         max-width: 100%;
         border-radius: 0;
         box-shadow: none;
@@ -553,14 +552,14 @@ body {
 
 /* 大屏幕：居中显示 */
 @media (min-width: 1200px) {
-    #stage {
+    #app {
         max-width: 400px;
     }
 }
 
 /* 超大屏幕 */
 @media (min-width: 1600px) {
-    #stage {
+    #app {
         max-width: 450px;
     }
 }
