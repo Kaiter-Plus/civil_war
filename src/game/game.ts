@@ -150,9 +150,9 @@ export class Game {
     diffGroup.className = 'difficultyGroup col-8 mb-3';
     diffGroup.innerHTML = `
       <div class="btn-group w-100" role="group">
-        <button type="button" class="btn btn-outline-light diff-btn" data-diff="easy">简单</button>
-        <button type="button" class="btn btn-outline-light diff-btn active-selected" data-diff="normal">普通</button>
-        <button type="button" class="btn btn-outline-light diff-btn" data-diff="hard">困难</button>
+        <button type="button" class="btn diff-btn" data-diff="easy">简单</button>
+        <button type="button" class="btn diff-btn active-selected" data-diff="normal">普通</button>
+        <button type="button" class="btn diff-btn" data-diff="hard">困难</button>
       </div>`;
     this.stage.appendChild(diffGroup);
 
@@ -172,7 +172,7 @@ export class Game {
       <a class="btn btn-block btn-lg btn-primary" href="javascript:;">查看规则</a>
       <a class="btn btn-block btn-lg btn-warning" href="javascript:;">防疫小知识</a>
       <a class="btn btn-block btn-lg btn-danger" href="javascript:;">谣言我先知</a>
-      <a class="btn btn-block btn-lg btn-outline-light" href="javascript:;">排行榜</a>`;
+      <a class="btn btn-block btn-lg btn-leaderboard" href="javascript:;">排行榜</a>`;
     this.stage.appendChild(buttonGroup);
 
     buttonGroup.querySelectorAll('a').forEach((btn, index) => {
