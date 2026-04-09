@@ -47,7 +47,7 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-/* v-html 内容的深度样式 - 使用原生 CSS 属性 */
+/* v-html 内容的深度样式 - 必须保留，无法用 Tailwind 类 */
 :deep(.rumor) {
   color: #f87171;
   margin-bottom: 12px;
@@ -80,7 +80,7 @@ const emit = defineEmits<{
   font-weight: 600;
   padding: 10px 12px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -115,7 +115,7 @@ const emit = defineEmits<{
 :deep(.lb-score) {
   flex: 1;
   text-align: center;
-  color: #eab308;
+  color: #fbbf24;
   font-weight: 600;
 }
 
