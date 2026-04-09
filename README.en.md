@@ -1,26 +1,28 @@
 # National War Epidemic
 
-A pandemic-themed shoot 'em up game built with Canvas rendering and TypeScript.
+A pandemic-themed shoot 'em up game built with Vue 3.6 Vapor Mode + Canvas rendering + TypeScript.
 
 ## Tech Stack
 
+- **Framework**: Vue 3.6 Vapor Mode
 - **Runtime**: TypeScript 5.x
 - **Build Tool**: Vite 6.x
+- **Styling**: Tailwind CSS v4
 - **Package Manager**: Bun
 - **Rendering**: Canvas 2D
-- **UI**: Native DOM + CSS
 
 ## Features
 
-- Three difficulty modes (Easy/Normal/Hard)
+- Three difficulty modes (Easy/Normal/Hard) with selection feedback
 - Dynamic difficulty system (auto-levels up when killing viruses)
-- Combo kill rewards
-- Canvas particle effects (exhaust trails, kill explosions)
+- Player upgrade system (fire rate +8%/projectile speed +10% every 3 levels, double fire at level 10)
+- Combo kill rewards (multiplier shown from 3-combo onwards)
+- Canvas particle effects (starry background, exhaust trails, kill explosions)
 - Floating score text
-- Local leaderboard (separated by difficulty)
+- Local leaderboard (Top 10 per difficulty)
 - Pandemic knowledge/rumor cards
 - Responsive layout (9:16 fixed aspect ratio)
-- Full sound effects system
+- Full sound effects system (fade in/out background music)
 
 ## Quick Start
 
@@ -42,29 +44,48 @@ bun run preview
 
 ```
 src/
+├── main.ts            # Vue Vapor entry
+├── App.vue            # Root component (state management)
+├── components/
+│   ├── MenuScreen.vue     # Menu screen
+│   ├── GameCanvas.vue     # Game canvas
+│   ├── Modal.vue          # Modal component
+│   └── ResultScreen.vue   # Result screen
+├── composables/
+│   └── useGame.ts         # Game logic encapsulation
 ├── game/
-│   ├── index.ts      # Entry
-│   ├── game.ts       # Game loop
-│   ├── renderer.ts   # Canvas renderer
-│   ├── audio.ts      # Audio manager
-│   ├── config.ts     # Config & resource imports
-│   ├── types.ts      # Type definitions
-│   └── utils.ts      # Utility functions
-├── css/index.css     # Styles
-├── img/              # Game entity images
+│   ├── renderer.ts        # Canvas renderer
+│   ├── audio.ts           # Audio manager
+│   ├── config.ts          # Config & resource imports
+│   ├── types.ts           # Type definitions
+│   └── utils.ts           # Utility functions
+├── css/
+│   ├── index.css          # Global styles
+│   └── tailwind.css       # Tailwind entry
+├── img/                   # Game entity images
 ├── assets/
-│   ├── img/          # UI images
-│   └── json/         # Pandemic data
-├── music/            # Sound effects (mp3)
-└── index.html        # Entry HTML
+│   ├── img/               # UI images
+│   └── json/              # Pandemic data
+├── music/                 # Sound effects (mp3)
+└── index.html             # Entry HTML
 ```
 
 ## Build Output
 
-- JS: ~49KB (gzip ~24KB)
-- CSS: ~7KB (gzip ~2KB)
+- JS: ~97KB (gzip ~44KB)
+- CSS: ~19KB (gzip ~4.6KB)
 
 ## Development History
+
+### v3.0.0 (2026-04-09)
+
+- Refactor: Native TS → Vue 3.6 Vapor Mode
+- Styling: Native CSS → Tailwind CSS v4
+- New: Player upgrade system (fire rate/speed/double fire)
+- New: Difficulty button selection feedback
+- New: Display difficulty name in game UI
+- Optimize: Component-based architecture, logic encapsulated as composable
+- Fix: Audio fade in/out volume overflow bug
 
 ### v2.0.0 (2026-04-09)
 
@@ -75,7 +96,7 @@ src/
 - Optimize: Removed jQuery/Bootstrap dependencies
 - Optimize: Audio files trimmed (removed ogg/wav)
 - Optimize: Responsive 9:16 fixed aspect ratio layout
-- Quality: Enabled TypeScript strict mode (noImplicitAny)
+- Quality: Enabled TypeScript strict mode
 
 ### v1.x (2020-04)
 
