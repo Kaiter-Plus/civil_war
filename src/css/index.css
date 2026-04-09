@@ -1,5 +1,3 @@
-@import "normalize.css";
-
 /* ==================== 基础样式 ==================== */
 
 html,
@@ -61,7 +59,7 @@ body {
 #stage > .buttonGroup {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   justify-content: center;
   align-items: center;
 }
@@ -129,7 +127,6 @@ body {
 
 /* ==================== 菜单 ==================== */
 
-/* 难度选择 */
 .difficultyGroup {
   width: 66.666667%;
 }
@@ -154,7 +151,6 @@ body {
   font-weight: bold;
 }
 
-/* 按键 */
 #stage .buttonGroup a {
   width: 100%;
   text-decoration: none;
@@ -255,6 +251,72 @@ body {
   background: #f8f9fa;
 }
 
+/* ==================== 排行榜 ==================== */
+
+.leaderboard-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lb-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lb-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #495057;
+  padding: 10px 16px;
+  background: #e9ecef;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.lb-empty {
+  padding: 16px;
+  text-align: center;
+  color: #adb5bd;
+  font-size: 14px;
+}
+
+.lb-list {
+  padding: 0;
+}
+
+.lb-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 14px;
+}
+
+.lb-row:last-child {
+  border-bottom: none;
+}
+
+.lb-rank {
+  width: 40px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.lb-score {
+  flex: 1;
+  text-align: center;
+  font-weight: 700;
+  color: #212529;
+}
+
+.lb-date {
+  width: 80px;
+  text-align: right;
+  color: #6c757d;
+  font-size: 12px;
+}
+
 /* ==================== 结算面板 ==================== */
 
 .result-overlay {
@@ -306,18 +368,10 @@ body {
   margin-bottom: 4px;
 }
 
-.result-card.alert-success .result-score {
-  color: #0f5132;
-}
-.result-card.alert-warning .result-score {
-  color: #664d03;
-}
-.result-card.alert-info .result-score {
-  color: #055160;
-}
-.result-card.alert-danger .result-score {
-  color: #842029;
-}
+.result-card.alert-success .result-score { color: #0f5132; }
+.result-card.alert-warning .result-score { color: #664d03; }
+.result-card.alert-info .result-score { color: #055160; }
+.result-card.alert-danger .result-score { color: #842029; }
 
 .result-score-unit {
   font-size: 18px;
@@ -331,17 +385,16 @@ body {
   line-height: 1.6;
 }
 
-.result-card.alert-success .result-message {
-  color: #0f5132;
-}
-.result-card.alert-warning .result-message {
-  color: #664d03;
-}
-.result-card.alert-info .result-message {
-  color: #055160;
-}
-.result-card.alert-danger .result-message {
-  color: #842029;
+.result-card.alert-success .result-message { color: #0f5132; }
+.result-card.alert-warning .result-message { color: #664d03; }
+.result-card.alert-info .result-message { color: #055160; }
+.result-card.alert-danger .result-message { color: #842029; }
+
+.result-combo {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 16px;
+  font-weight: 600;
 }
 
 .result-restart-btn {
@@ -364,43 +417,23 @@ body {
 /* ==================== 动画 ==================== */
 
 @keyframes modalFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes resultFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes resultScaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* ==================== 背景 ==================== */
@@ -419,42 +452,13 @@ body {
 
 /* ==================== 响应式 ==================== */
 
-.col-8 {
-  width: 66.666667%;
-}
-.col-12 {
-  width: 100%;
-}
+.col-8 { width: 66.666667%; }
+.col-12 { width: 100%; }
+.mb-3 { margin-bottom: 1rem; }
+.w-100 { width: 100%; }
+.img-fluid { max-width: 100%; height: auto; }
 
 @media (min-width: 1200px) {
-  .col-xl-4 {
-    width: 33.333333%;
-  }
-  .offset-xl-4 {
-    margin-left: 33.333333%;
-  }
-}
-
-.container-fluid {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  height: 100%;
-}
-
-.mb-3 {
-  margin-bottom: 1rem;
-}
-.w-100 {
-  width: 100%;
-}
-.img-fluid {
-  max-width: 100%;
-  height: auto;
+  .col-xl-4 { width: 33.333333%; }
+  .offset-xl-4 { margin-left: 33.333333%; }
 }

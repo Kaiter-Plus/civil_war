@@ -1,9 +1,39 @@
-import type { GameState, GameTimers, DifficultyName, CapsuleEntity, VirusEntity, Particle, DifficultyConfig } from './types';
+import type { GameState, GameTimers, DifficultyName, CapsuleEntity, VirusEntity, Particle, ScorePopup, DifficultyConfig } from './types';
 import { difficulties, data, audio as audioSrc, images as imageSrcs } from './config';
 import { audioManager } from './audio';
 import { randomInt, clamp, isMobile } from './utils';
 import { Renderer } from './renderer';
 import { SIZES } from './types';
+
+/** 对象池：复用实体对象减少 GC */
+class ObjectPool<T> {
+  private pool: T[] = [];
+  private factory: () => T;
+  private reset: (obj: T) => void;
+
+  constructor(factory: () => T, reset: (obj: T) => void, initialSize = 0) {
+    this.factory = factory;
+    this.reset = reset;
+    for (let i = 0; i < initialSize; i++) {
+      this.pool.push(factory());
+    }
+  }
+
+  acquire(): T {
+    if (this.pool.length > 0) {
+      const obj = this.pool.pop()!;
+      this.reset(obj);
+      return obj;
+    }
+    return this.factory();
+  }
+
+  release(obj: T): void {
+    if (this.pool.length < 100) {
+      this.pool.push(obj);
+    }
+  }
+}
 
 /** 游戏主类 */
 export class Game {
@@ -14,6 +44,18 @@ export class Game {
   private difficulty: DifficultyName = 'normal';
   private score = 0;
 
+  // 连杀系统
+  private combo = 0;
+  private maxCombo = 0;
+  private lastKillTime = 0;
+  private comboTimeout = 1500; // 1.5s 内不击杀则连杀断
+
+  // 动态难度
+  private currentLevel = 1;
+  private currentInterval: number;
+  private currentSpeedMin: number;
+  private currentSpeedMax: number;
+
   // 救护车位置（中心X, 顶部Y）
   private ambulanceX = 0;
   private ambulanceY = 0;
@@ -22,6 +64,11 @@ export class Game {
   private capsules: CapsuleEntity[] = [];
   private viruses: VirusEntity[] = [];
   private particles: Particle[] = [];
+  private scorePopups: ScorePopup[] = [];
+
+  // 对象池
+  private particlePool: ObjectPool<Particle>;
+  private popupPool: ObjectPool<ScorePopup>;
 
   // 游戏循环
   private gameLoopRAF = 0;
@@ -50,6 +97,24 @@ export class Game {
     this.stage.appendChild(this.canvas);
 
     this.renderer = new Renderer(this.canvas);
+
+    // 初始化动态难度参数
+    const cfg = difficulties[this.difficulty];
+    this.currentInterval = cfg.virusInterval;
+    this.currentSpeedMin = cfg.virusSpeedMin;
+    this.currentSpeedMax = cfg.virusSpeedMax;
+
+    // 对象池
+    this.particlePool = new ObjectPool<Particle>(
+      () => ({ x: 0, y: 0, vx: 0, vy: 0, life: 0, maxLife: 500, size: 3, color: '#fff' }),
+      () => {},
+      50,
+    );
+    this.popupPool = new ObjectPool<ScorePopup>(
+      () => ({ x: 0, y: 0, text: '', color: '#fff', life: 0, maxLife: 800 }),
+      () => {},
+      10,
+    );
 
     // 加载音频
     audioManager.init(audioSrc);
@@ -106,7 +171,8 @@ export class Game {
       <a class="btn btn-block btn-lg btn-success" href="javascript:;">开始游戏</a>
       <a class="btn btn-block btn-lg btn-primary" href="javascript:;">查看规则</a>
       <a class="btn btn-block btn-lg btn-warning" href="javascript:;">防疫小知识</a>
-      <a class="btn btn-block btn-lg btn-danger" href="javascript:;">谣言我先知</a>`;
+      <a class="btn btn-block btn-lg btn-danger" href="javascript:;">谣言我先知</a>
+      <a class="btn btn-block btn-lg btn-outline-light" href="javascript:;">排行榜</a>`;
     this.stage.appendChild(buttonGroup);
 
     buttonGroup.querySelectorAll('a').forEach((btn, index) => {
@@ -128,7 +194,36 @@ export class Game {
         this.showModal('谣言我先知', `<div class="rumor">${rumor}</div><div class="truth">${truth}</div>`);
         break;
       }
+      case 4:
+        this.showLeaderboard();
+        break;
     }
+  }
+
+  // ======================== 排行榜 ========================
+
+  private showLeaderboard(): void {
+    let html = '<div class="leaderboard-tabs">';
+    for (const diff of ['easy', 'normal', 'hard'] as DifficultyName[]) {
+      const label = difficulties[diff].label;
+      const scores = this.getLeaderboard(diff);
+      html += `<div class="lb-section">
+        <div class="lb-title">${label}</div>`;
+      if (scores.length === 0) {
+        html += '<div class="lb-empty">暂无记录</div>';
+      } else {
+        html += '<div class="lb-list">';
+        for (let i = 0; i < scores.length; i++) {
+          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+          const date = new Date(scores[i].date).toLocaleDateString('zh-CN');
+          html += `<div class="lb-row"><span class="lb-rank">${medal}</span><span class="lb-score">${scores[i].score}</span><span class="lb-date">${date}</span></div>`;
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    this.showModal('排行榜', html);
   }
 
   // ======================== 自定义 Modal ========================
@@ -187,8 +282,19 @@ export class Game {
     this.capsules = [];
     this.viruses = [];
     this.particles = [];
+    this.scorePopups = [];
+    this.combo = 0;
+    this.maxCombo = 0;
+    this.lastKillTime = 0;
+    this.currentLevel = 1;
     this.capsuleAccum = 0;
     this.virusAccum = 0;
+
+    // 重置动态难度
+    const cfg = difficulties[this.difficulty];
+    this.currentInterval = cfg.virusInterval;
+    this.currentSpeedMin = cfg.virusSpeedMin;
+    this.currentSpeedMax = cfg.virusSpeedMax;
 
     // 初始救护车位置
     this.ambulanceX = width / 2;
@@ -210,7 +316,6 @@ export class Game {
         if (fontSize >= 80) readyPhase = 'go';
       } else {
         this.renderer.drawReadyText('GO!', 80);
-        // 淡出由 drawReadyText 内部处理
         fontSize += 2;
         if (fontSize >= 140) {
           clearInterval(this.timers.ready!);
@@ -244,7 +349,7 @@ export class Game {
   private gameLoop = (now: number): void => {
     if (this.state !== 'playing') return;
 
-    const dt = Math.min(now - this.lastTime, 50); // 上限 50ms 防跳帧
+    const dt = Math.min(now - this.lastTime, 50);
     this.lastTime = now;
 
     const config = difficulties[this.difficulty];
@@ -258,19 +363,19 @@ export class Game {
 
     // 生成病毒
     this.virusAccum += dt;
-    while (this.virusAccum >= config.virusInterval) {
-      this.spawnVirus(config.virusSpeedMin, config.virusSpeedMax);
-      this.virusAccum -= config.virusInterval;
+    while (this.virusAccum >= this.currentInterval) {
+      this.spawnVirus(this.currentSpeedMin, this.currentSpeedMax);
+      this.virusAccum -= this.currentInterval;
     }
 
     // 更新实体
-    this.updateEntities(dt);
+    this.updateEntities(dt, now);
 
     // 碰撞检测
-    this.checkCollisions();
+    this.checkCollisions(now);
 
     // 渲染
-    this.render();
+    this.render(now);
 
     this.gameLoopRAF = requestAnimationFrame(this.gameLoop);
   };
@@ -293,7 +398,7 @@ export class Game {
     this.capsules.push({
       x: this.ambulanceX,
       y: this.ambulanceY - 13,
-      vy: -(height + 26) / speed, // 从当前位置飞到顶部外的时间 = speed ms
+      vy: -(height + 26) / speed,
       active: true,
     });
   }
@@ -310,17 +415,21 @@ export class Game {
       width: 64,
       height: 64,
       vx: (targetLeft - left) / speed,
-      vy: (height + 128) / speed, // 从 -64 飞到 height+64 的时间 = speed ms
+      vy: (height + 128) / speed,
       rotation: 0,
-      rotationSpeed: (Math.PI * 2) / 2000, // 2s 一圈
+      rotationSpeed: (Math.PI * 2) / 2000,
       active: true,
       killedAt: null,
     });
   }
 
-  private updateEntities(dt: number): void {
+  private updateEntities(dt: number, now: number): void {
     const { height } = this.renderer.getSize();
-    const now = performance.now();
+
+    // 连杀超时检测
+    if (this.combo > 0 && now - this.lastKillTime > this.comboTimeout) {
+      this.combo = 0;
+    }
 
     // 更新胶囊
     for (const cap of this.capsules) {
@@ -330,43 +439,56 @@ export class Game {
     }
     this.capsules = this.capsules.filter(c => c.active);
 
-    // 更新病毒：被击杀的显示 killed 图 500ms 后移除
+    // 更新病毒
     for (const v of this.viruses) {
       if (!v.active) continue;
-      if (v.killedAt !== null) continue; // 被击杀的不再移动
+      if (v.killedAt !== null) continue;
       v.x += v.vx * dt;
       v.y += v.vy * dt;
       v.rotation += v.rotationSpeed * dt;
-
-      // 飞出屏幕
       if (v.y > height + 64) v.active = false;
     }
-    // 过滤：active=true 或者被击杀但还在显示期内
     this.viruses = this.viruses.filter(v =>
       v.active || (v.killedAt !== null && now - v.killedAt < 500)
     );
 
     // 更新粒子
-    for (const p of this.particles) {
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
       p.x += p.vx * dt;
       p.y += p.vy * dt;
-      p.vy += 0.0002 * dt; // 微重力
+      p.vy += 0.0002 * dt;
       p.life -= dt;
+      if (p.life <= 0) {
+        this.particlePool.release(this.particles[i]);
+        this.particles[i] = this.particles[this.particles.length - 1];
+        this.particles.pop();
+      }
     }
-    this.particles = this.particles.filter(p => p.life > 0);
+
+    // 更新分数飘字
+    for (let i = this.scorePopups.length - 1; i >= 0; i--) {
+      const sp = this.scorePopups[i];
+      sp.life -= dt;
+      if (sp.life <= 0) {
+        this.popupPool.release(this.scorePopups[i]);
+        this.scorePopups[i] = this.scorePopups[this.scorePopups.length - 1];
+        this.scorePopups.pop();
+      }
+    }
   }
 
   // ======================== 碰撞检测 ========================
 
-  private checkCollisions(): void {
+  private checkCollisions(now: number): void {
     const ax = this.ambulanceX;
-    const ay = this.ambulanceY + 32; // 救护车中心
+    const ay = this.ambulanceY + 32;
 
     for (let vi = this.viruses.length - 1; vi >= 0; vi--) {
       const v = this.viruses[vi];
       if (!v.active || v.killedAt !== null) continue;
 
-      const vx = v.x + 32; // 病毒中心
+      const vx = v.x + 32;
       const vy = v.y + 32;
 
       // 胶囊 vs 病毒
@@ -376,9 +498,9 @@ export class Game {
         if (!c.active) continue;
         if (Math.abs(vx - c.x) <= 40 && Math.abs(vy - c.y) <= 45) {
           c.active = false;
-          v.active = false;  // 标记为非活跃，依赖 killedAt 显示击杀图
-          v.killedAt = performance.now();
-          this.onVirusKilled(v);
+          v.active = false;
+          v.killedAt = now;
+          this.onVirusKilled(v, now);
           hit = true;
           break;
         }
@@ -396,25 +518,70 @@ export class Game {
 
   // ======================== 游戏事件 ========================
 
-  private onVirusKilled(virus: VirusEntity): void {
+  private onVirusKilled(virus: VirusEntity, now: number): void {
     audioManager.play('killed');
     this.score++;
 
-    // 生成击杀粒子
+    // 连杀系统
+    this.combo++;
+    if (this.combo > this.maxCombo) this.maxCombo = this.combo;
+    this.lastKillTime = now;
+
+    // 连杀奖励分
+    let bonusText = '';
+    let bonusColor = '#ffffff';
+    if (this.combo >= 3) {
+      const multiplier = 1 + Math.floor(this.combo / 3) * 0.5;
+      this.score += Math.floor(multiplier) - 1; // 连杀额外加分
+      bonusText = ` x${multiplier.toFixed(1)}`;
+      bonusColor = this.combo >= 10 ? '#ff00ff' : this.combo >= 5 ? '#ff4444' : '#ffcc00';
+    }
+
+    // 分数飘字
+    const popup = this.popupPool.acquire();
+    popup.x = virus.x + 32;
+    popup.y = virus.y + 20;
+    popup.text = `+${1000}${bonusText}`;
+    popup.color = bonusColor;
+    popup.life = 800;
+    popup.maxLife = 800;
+    this.scorePopups.push(popup);
+
+    // 击杀粒子
     const cx = virus.x + 32;
     const cy = virus.y + 32;
-    for (let i = 0; i < 8; i++) {
-      const angle = (Math.PI * 2 * i) / 8 + Math.random() * 0.5;
+    const particleCount = Math.min(8 + this.combo, 20);
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5;
       const speed = 0.15 + Math.random() * 0.2;
-      this.particles.push({
-        x: cx, y: cy,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 0.1,
-        life: 300 + Math.random() * 200,
-        maxLife: 500,
-        size: 3 + Math.random() * 3,
-        color: ['#ff4444', '#ff8800', '#ffcc00', '#44ff44'][Math.floor(Math.random() * 4)],
-      });
+      const p = this.particlePool.acquire();
+      p.x = cx; p.y = cy;
+      p.vx = Math.cos(angle) * speed;
+      p.vy = Math.sin(angle) * speed - 0.1;
+      p.life = 300 + Math.random() * 200;
+      p.maxLife = 500;
+      p.size = 3 + Math.random() * 3;
+      p.color = ['#ff4444', '#ff8800', '#ffcc00', '#44ff44'][Math.floor(Math.random() * 4)];
+      this.particles.push(p);
+    }
+
+    // 动态难度升级
+    this.checkDifficultyUpgrade();
+  }
+
+  /** 检查是否需要提升难度 */
+  private checkDifficultyUpgrade(): void {
+    const cfg = difficulties[this.difficulty];
+    const newLevel = 1 + Math.floor(this.score / cfg.accelEvery);
+    if (newLevel > this.currentLevel) {
+      this.currentLevel = newLevel;
+      const steps = newLevel - 1;
+      this.currentInterval = Math.max(
+        cfg.intervalFloor,
+        cfg.virusInterval - cfg.accelInterval * steps,
+      );
+      this.currentSpeedMin = Math.max(500, cfg.virusSpeedMin - cfg.accelSpeedMin * steps);
+      this.currentSpeedMax = Math.max(1000, cfg.virusSpeedMax - cfg.accelSpeedMax * steps);
     }
   }
 
@@ -424,44 +591,42 @@ export class Game {
     audioManager.play('gameOver');
     audioManager.fadeOutBgMusic(600);
 
-    // 停止游戏循环
     cancelAnimationFrame(this.gameLoopRAF);
 
-    // 清理移动监听
     if (this.moveHandler) {
       document.removeEventListener('mousemove', this.moveHandler);
       document.removeEventListener('touchmove', this.moveHandler);
       this.moveHandler = null;
     }
 
-    // 生成爆炸粒子
+    // 爆炸粒子
     const cx = this.ambulanceX;
     const cy = this.ambulanceY + 32;
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const speed = 0.1 + Math.random() * 0.3;
-      this.particles.push({
-        x: cx, y: cy,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 0.15,
-        life: 500 + Math.random() * 500,
-        maxLife: 1000,
-        size: 4 + Math.random() * 5,
-        color: ['#ff0000', '#ff6600', '#ffff00', '#ffffff'][Math.floor(Math.random() * 4)],
-      });
+      const speed = 0.1 + Math.random() * 0.35;
+      const p = this.particlePool.acquire();
+      p.x = cx; p.y = cy;
+      p.vx = Math.cos(angle) * speed;
+      p.vy = Math.sin(angle) * speed - 0.15;
+      p.life = 500 + Math.random() * 500;
+      p.maxLife = 1000;
+      p.size = 4 + Math.random() * 6;
+      p.color = ['#ff0000', '#ff6600', '#ffff00', '#ffffff'][Math.floor(Math.random() * 4)];
+      this.particles.push(p);
     }
 
     // 播放爆炸动画后显示结算
     const explosionStart = performance.now();
     const explosionLoop = (now: number) => {
-      const dt = now - explosionStart;
-      this.updateEntities(16);
+      const dt = 16;
+      this.updateEntities(dt, now);
       this.renderer.clear();
-      // 不画救护车（已爆炸）
+      this.renderer.drawBackground(now);
       for (const v of this.viruses) this.renderer.drawVirus(v);
       for (const c of this.capsules) this.renderer.drawCapsule(c);
       this.renderer.drawParticles(this.particles);
-      if (dt < 800) {
+      if (now - explosionStart < 800) {
         requestAnimationFrame(explosionLoop);
       } else {
         this.showResult();
@@ -469,19 +634,20 @@ export class Game {
     };
     requestAnimationFrame(explosionLoop);
 
-    // 保存分数
     this.saveScore();
   }
 
   // ======================== 渲染 ========================
 
-  private render(): void {
+  private render(now: number): void {
     this.renderer.clear();
-    this.renderer.drawAmbulance(this.ambulanceX, this.ambulanceY);
+    this.renderer.drawBackground(now);
+    this.renderer.drawAmbulance(this.ambulanceX, this.ambulanceY, now);
     for (const c of this.capsules) this.renderer.drawCapsule(c);
     for (const v of this.viruses) this.renderer.drawVirus(v);
     this.renderer.drawParticles(this.particles);
-    this.renderer.drawScore(this.score);
+    this.renderer.drawScorePopups(this.scorePopups);
+    this.renderer.drawScore(this.score, this.combo, this.maxCombo, this.currentLevel);
   }
 
   // ======================== 结算 ========================
@@ -517,6 +683,7 @@ export class Game {
         <div class="result-score">${scoreText}</div>
         <div class="result-score-unit">分</div>
         <div class="result-message">${message}</div>
+        ${this.maxCombo >= 3 ? `<div class="result-combo">最高连杀: ${this.maxCombo}</div>` : ''}
         <button class="btn btn-lg btn-primary result-restart-btn">继续消灭</button>
       </div>
     `;
@@ -524,7 +691,6 @@ export class Game {
 
     result.querySelector('.result-restart-btn')!.addEventListener('click', () => this.restart());
 
-    // 弹出防疫知识
     setTimeout(() => {
       this.showModal('悄悄告诉你：', data.knowledge[randomInt(0, data.knowledge.length)]);
     }, 500);
@@ -552,6 +718,9 @@ export class Game {
     this.capsules = [];
     this.viruses = [];
     this.particles = [];
+    this.scorePopups = [];
+    this.combo = 0;
+    this.maxCombo = 0;
     if (this.timers.ready) clearInterval(this.timers.ready);
     Array.from(this.stage.children).forEach(ch => { if (ch !== this.canvas) ch.remove(); });
     this.drawMenu();

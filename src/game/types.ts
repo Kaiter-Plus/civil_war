@@ -12,6 +12,16 @@ export interface DifficultyConfig {
   virusInterval: number;
   /** 显示名称 */
   label: string;
+  /** 每 N 分加速一次 */
+  accelEvery: number;
+  /** 每次加速病毒间隔减少量 (ms) */
+  accelInterval: number;
+  /** 每次加速病毒速度范围下限减少量 (ms) */
+  accelSpeedMin: number;
+  /** 每次加速病毒速度范围上限减少量 (ms) */
+  accelSpeedMax: number;
+  /** 间隔加速下限 */
+  intervalFloor: number;
 }
 
 /** 游戏定时器（菜单阶段用） */
@@ -67,6 +77,27 @@ export interface Particle {
   maxLife: number;
   size: number;
   color: string;
+}
+
+/** 分数飘字 */
+export interface ScorePopup {
+  x: number;
+  y: number;
+  text: string;
+  color: string;
+  life: number;
+  maxLife: number;
+}
+
+/** 背景星星 */
+export interface Star {
+  x: number;
+  y: number;
+  size: number;
+  speed: number;
+  alpha: number;
+  twinkleSpeed: number;
+  twinkleOffset: number;
 }
 
 /** 游戏实体尺寸常量 */
