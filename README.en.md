@@ -14,6 +14,7 @@ A pandemic-themed shoot 'em up game built with Vue 3.6 Vapor Mode + Canvas rende
 ## Features
 
 - Three difficulty modes (Easy/Normal/Hard) with selection feedback
+- 6 virus movement patterns (straight, sine wave, zigzag, chase, spiral, dive)
 - Dynamic difficulty system (auto-levels up when killing viruses)
 - Player upgrade system (fire rate +8%/projectile speed +10% every 3 levels, double fire at level 10)
 - Combo kill rewards (multiplier shown from 3-combo onwards)
@@ -23,6 +24,26 @@ A pandemic-themed shoot 'em up game built with Vue 3.6 Vapor Mode + Canvas rende
 - Pandemic knowledge/rumor cards
 - Responsive layout (9:16 fixed aspect ratio)
 - Full sound effects system (fade in/out background music)
+
+## Development Tools
+
+- **Lint**: oxlint (Rust-based, ultra-fast)
+- **Format**: oxfmt (Prettier style: no semicolons, single quotes, 2-space indent)
+- **Hooks**: simple-git-hooks (pre-commit auto lint + format)
+
+```bash
+# Check code
+bun run lint
+
+# Format code
+bun run fmt
+
+# Pre-commit check (manual)
+bun run precommit
+
+# Direct commit (auto triggers pre-commit hook)
+git commit
+```
 
 ## Quick Start
 
@@ -76,6 +97,13 @@ src/
 - CSS: ~19KB (gzip ~4.6KB)
 
 ## Development History
+
+### v3.1.0 (2026-04-09)
+
+- New: 6 virus movement patterns (straight, sine wave, zigzag, chase, spiral, dive)
+- New: oxlint + oxfmt toolchain + pre-commit hooks
+- Config: Prettier-style formatting (no semicolons, single quotes, 2-space indent)
+- Optimize: Unified code formatting
 
 ### v3.0.0 (2026-04-09)
 
