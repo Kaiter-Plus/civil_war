@@ -1,23 +1,35 @@
 {
   "name": "civil-war",
   "version": "1.0.0",
+  "description": "全民战疫 - 飞机大战类型游戏",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt --write",
+    "fmt:check": "oxfmt --check",
+    "precommit": "bun run lint && bun run fmt",
+    "postinstall": "simple-git-hooks"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "全民战疫 - 飞机大战类型游戏",
   "dependencies": {
     "vue": "3.6.0-beta.9"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "@vitejs/plugin-vue": "6.0.5",
+    "oxfmt": "^0.44.0",
+    "oxlint": "^1.59.0",
+    "simple-git-hooks": "^2.13.1",
     "tailwindcss": "^4.2.2",
     "vite": "^8.0.7"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "bun run precommit"
   }
 }

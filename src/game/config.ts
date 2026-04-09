@@ -1,25 +1,25 @@
-import type { DifficultyConfig, DifficultyName } from './types';
+import type { DifficultyConfig, DifficultyName, VirusMovePattern } from "./types"
 
 // 图片资源
-import logoImg from '../assets/img/logo.png';
-import ambulanceImg from '../img/ambulance.png';
-import capsuleImg from '../img/capsule.png';
-import virusImg from '../img/virus.png';
-import killedImg from '../assets/img/killed.png';
-import isDestroyImg from '../assets/img/isDestroy.png';
+import logoImg from "../assets/img/logo.png"
+import ambulanceImg from "../img/ambulance.png"
+import capsuleImg from "../img/capsule.png"
+import virusImg from "../img/virus.png"
+import killedImg from "../assets/img/killed.png"
+import isDestroyImg from "../assets/img/isDestroy.png"
 
 // 音频资源
-import buttonMp3 from '../music/buttonDown/button.mp3';
-import startMp3 from '../music/start/start.mp3';
-import bgMusicMp3 from '../music/backgroundMusic/backgroundMusic.mp3';
-import shotMp3 from '../music/shot/shot.mp3';
-import killedMp3 from '../music/killed/killed.mp3';
-import gameOverMp3 from '../music/gameOver/gameOver.mp3';
+import buttonMp3 from "../music/buttonDown/button.mp3"
+import startMp3 from "../music/start/start.mp3"
+import bgMusicMp3 from "../music/backgroundMusic/backgroundMusic.mp3"
+import shotMp3 from "../music/shot/shot.mp3"
+import killedMp3 from "../music/killed/killed.mp3"
+import gameOverMp3 from "../music/gameOver/gameOver.mp3"
 
 // JSON 数据
-import rulesData from '../assets/json/rules.json';
-import knowledgeData from '../assets/json/knowledge.json';
-import rumorsData from '../assets/json/rumors.json';
+import rulesData from "../assets/json/rules.json"
+import knowledgeData from "../assets/json/knowledge.json"
+import rumorsData from "../assets/json/rumors.json"
 
 export const images = {
   logo: logoImg,
@@ -27,8 +27,8 @@ export const images = {
   capsule: capsuleImg,
   virus: virusImg,
   killed: killedImg,
-  isDestroy: isDestroyImg,
-} as const;
+  isDestroy: isDestroyImg
+} as const
 
 export const audio = {
   button: buttonMp3,
@@ -36,14 +36,14 @@ export const audio = {
   bgMusic: bgMusicMp3,
   shot: shotMp3,
   killed: killedMp3,
-  gameOver: gameOverMp3,
-} as const;
+  gameOver: gameOverMp3
+} as const
 
 export const data = {
   rules: rulesData,
   knowledge: knowledgeData,
-  rumors: rumorsData as [string, string][],
-} as const;
+  rumors: rumorsData as [string, string][]
+} as const
 
 /** 难度配置表 */
 export const difficulties: Record<DifficultyName, DifficultyConfig> = {
@@ -53,12 +53,12 @@ export const difficulties: Record<DifficultyName, DifficultyConfig> = {
     virusSpeedMin: 2500,
     virusSpeedMax: 5000,
     virusInterval: 800,
-    label: '简单',
+    label: "简单",
     accelEvery: 5,
     accelInterval: 30,
     accelSpeedMin: 100,
     accelSpeedMax: 200,
-    intervalFloor: 500,
+    intervalFloor: 500
   },
   normal: {
     capsuleSpeed: 2000,
@@ -66,12 +66,12 @@ export const difficulties: Record<DifficultyName, DifficultyConfig> = {
     virusSpeedMin: 1500,
     virusSpeedMax: 4500,
     virusInterval: 600,
-    label: '普通',
+    label: "普通",
     accelEvery: 5,
     accelInterval: 25,
     accelSpeedMin: 80,
     accelSpeedMax: 150,
-    intervalFloor: 350,
+    intervalFloor: 350
   },
   hard: {
     capsuleSpeed: 1500,
@@ -79,21 +79,49 @@ export const difficulties: Record<DifficultyName, DifficultyConfig> = {
     virusSpeedMin: 1000,
     virusSpeedMax: 3000,
     virusInterval: 400,
-    label: '困难',
+    label: "困难",
     accelEvery: 5,
     accelInterval: 20,
     accelSpeedMin: 60,
     accelSpeedMax: 120,
-    intervalFloor: 200,
-  },
-};
+    intervalFloor: 200
+  }
+}
 
 /** 角色升级配置 - 每 3 级触发加强 */
 export const playerUpgrade = {
-  levelStep: 3,           // 每 3 级触发一次
-  fireRateBonus: 0.08,    // 射击间隔减少 8%
-  speedBonus: 0.08,       // 飞行时间减少 8%（速度提升）
-  fireRateMin: 120,       // 射击间隔下限 120ms
-  speedMin: 800,          // 飞行时间下限 800ms（最快）
-  doubleFireLevel: 10,    // 10 级获得双发能力
-};
+  levelStep: 3, // 每 3 级触发一次
+  fireRateBonus: 0.08, // 射击间隔减少 8%
+  speedBonus: 0.08, // 飞行时间减少 8%（速度提升）
+  fireRateMin: 120, // 射击间隔下限 120ms
+  speedMin: 800, // 飞行时间下限 800ms（最快）
+  doubleFireLevel: 10 // 10 级获得双发能力
+}
+
+/** 病毒移动模式权重配置 - 权重越高出现概率越大 */
+export const virusPatternWeights: Record<DifficultyName, Record<VirusMovePattern, number>> = {
+  easy: {
+    straight: 60, // 简单难度 60% 直线
+    sine: 25,
+    zigzag: 10,
+    chase: 5,
+    spiral: 0,
+    dive: 0
+  },
+  normal: {
+    straight: 40,
+    sine: 25,
+    zigzag: 20,
+    chase: 10,
+    spiral: 5,
+    dive: 0
+  },
+  hard: {
+    straight: 20,
+    sine: 20,
+    zigzag: 20,
+    chase: 15,
+    spiral: 15,
+    dive: 10
+  }
+}

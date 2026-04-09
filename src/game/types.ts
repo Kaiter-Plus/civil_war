@@ -1,108 +1,123 @@
 /** 游戏难度配置 */
 export interface DifficultyConfig {
   /** 胶囊飞行时间 (ms) */
-  capsuleSpeed: number;
+  capsuleSpeed: number
   /** 胶囊发射间隔 (ms) */
-  capsuleInterval: number;
+  capsuleInterval: number
   /** 病毒最小飞行时间 (ms) */
-  virusSpeedMin: number;
+  virusSpeedMin: number
   /** 病毒最大飞行时间 (ms) */
-  virusSpeedMax: number;
+  virusSpeedMax: number
   /** 病毒出现间隔 (ms) */
-  virusInterval: number;
+  virusInterval: number
   /** 显示名称 */
-  label: string;
+  label: string
   /** 每 N 分加速一次 */
-  accelEvery: number;
+  accelEvery: number
   /** 每次加速病毒间隔减少量 (ms) */
-  accelInterval: number;
+  accelInterval: number
   /** 每次加速病毒速度范围下限减少量 (ms) */
-  accelSpeedMin: number;
+  accelSpeedMin: number
   /** 每次加速病毒速度范围上限减少量 (ms) */
-  accelSpeedMax: number;
+  accelSpeedMax: number
   /** 间隔加速下限 */
-  intervalFloor: number;
+  intervalFloor: number
 }
 
 /** 游戏定时器（菜单阶段用） */
 export interface GameTimers {
-  ready: ReturnType<typeof setInterval> | null;
-  backgroundMusic: ReturnType<typeof setTimeout> | null;
+  ready: ReturnType<typeof setInterval> | null
+  backgroundMusic: ReturnType<typeof setTimeout> | null
 }
 
 /** 结算等级 */
-export type ResultLevel = 0 | 1 | 2 | 3;
+export type ResultLevel = 0 | 1 | 2 | 3
 
 /** 游戏状态 */
-export type GameState = 'menu' | 'ready' | 'playing' | 'over';
+export type GameState = "menu" | "ready" | "playing" | "over"
 
 /** 难度名称 */
-export type DifficultyName = 'easy' | 'normal' | 'hard';
+export type DifficultyName = "easy" | "normal" | "hard"
 
 /** 胶囊实体 */
 export interface CapsuleEntity {
-  x: number;
-  y: number;
+  x: number
+  y: number
   /** 向上飞行速度 (px/ms) */
-  vy: number;
-  active: boolean;
+  vy: number
+  active: boolean
 }
+
+/** 病毒移动模式 */
+export type VirusMovePattern = "straight" | "sine" | "zigzag" | "chase" | "spiral" | "dive"
 
 /** 病毒实体 */
 export interface VirusEntity {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  x: number
+  y: number
+  width: number
+  height: number
   /** 水平漂移速度 (px/ms) */
-  vx: number;
+  vx: number
   /** 垂直下落速度 (px/ms) */
-  vy: number;
+  vy: number
   /** 旋转角度 (弧度) */
-  rotation: number;
+  rotation: number
   /** 旋转速度 (弧度/ms) */
-  rotationSpeed: number;
-  active: boolean;
+  rotationSpeed: number
+  active: boolean
   /** 被击杀后的显示计时 */
-  killedAt: number | null;
+  killedAt: number | null
+  /** 移动模式 */
+  pattern: VirusMovePattern
+  /** 模式参数 - 正弦波: 振幅/频率, Z字: 周期/方向, 螺旋: 半径/角速度, 俯冲: 停留时间 */
+  patternParam: number
+  /** 模式参数2 */
+  patternParam2: number
+  /** 模式状态 - Z字方向/俯冲计时等 */
+  patternState: number
+  /** 生成时间 (用于计算正弦波等) */
+  spawnTime: number
+  /** 初始 X 位置 */
+  startX: number
 }
 
 /** 粒子效果 */
 export interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  life: number;
-  maxLife: number;
-  size: number;
-  color: string;
+  x: number
+  y: number
+  vx: number
+  vy: number
+  life: number
+  maxLife: number
+  size: number
+  color: string
 }
 
 /** 分数飘字 */
 export interface ScorePopup {
-  x: number;
-  y: number;
-  text: string;
-  color: string;
-  life: number;
-  maxLife: number;
+  x: number
+  y: number
+  text: string
+  color: string
+  life: number
+  maxLife: number
 }
 
 /** 背景星星 */
 export interface Star {
-  x: number;
-  y: number;
-  size: number;
-  speed: number;
-  alpha: number;
-  twinkleSpeed: number;
-  twinkleOffset: number;
+  x: number
+  y: number
+  size: number
+  speed: number
+  alpha: number
+  twinkleSpeed: number
+  twinkleOffset: number
 }
 
 /** 游戏实体尺寸常量 */
 export const SIZES = {
   ambulance: { width: 30, height: 64 },
   capsule: { width: 14, height: 26 },
-  virus: { width: 64, height: 64 },
-} as const;
+  virus: { width: 64, height: 64 }
+} as const

@@ -1,42 +1,44 @@
 <script setup lang="ts" vapor>
 const props = defineProps<{
-  title: string;
-  content: string;
-}>();
+  title: string
+  content: string
+}>()
 
 const emit = defineEmits<{
-  'close': [];
-}>();
+  close: []
+}>()
 </script>
 
 <template>
-  <div 
-    class="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000]" 
+  <div
+    class="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000]"
     @click.self="emit('close')"
   >
-    <div class="bg-[#1a1a2e] rounded-xl max-w-[90%] max-h-[80%] w-[400px] overflow-hidden shadow-2xl">
+    <div
+      class="bg-[#1a1a2e] rounded-xl max-w-[90%] max-h-[80%] w-[400px] overflow-hidden shadow-2xl"
+    >
       <!-- Header -->
       <div class="flex justify-between items-center p-4 px-5 border-b border-white/10">
         <h5 class="m-0 text-white text-lg">{{ title }}</h5>
-        <button 
-          class="bg-none border-none text-white/60 text-2xl cursor-pointer leading-none hover:text-white" 
-          @click="emit('close')" 
+        <button
+          class="bg-none border-none text-white/60 text-2xl cursor-pointer leading-none hover:text-white"
+          @click="emit('close')"
           aria-label="关闭"
         >
           &times;
         </button>
       </div>
-      
+
       <!-- Body -->
-      <div 
-        class="p-5 text-white/85 text-sm leading-relaxed max-h-[50vh] overflow-y-auto whitespace-pre-wrap" 
+      <div
+        class="p-5 text-white/85 text-sm leading-relaxed max-h-[50vh] overflow-y-auto whitespace-pre-wrap"
         v-html="content"
       ></div>
-      
+
       <!-- Footer -->
       <div class="p-4 px-5 border-t border-white/10 text-center">
-        <button 
-          class="py-2.5 px-8 border-none rounded-md text-sm font-medium cursor-pointer bg-green-600 text-white hover:bg-green-700 transition-colors" 
+        <button
+          class="py-2.5 px-8 border-none rounded-md text-sm font-medium cursor-pointer bg-green-600 text-white hover:bg-green-700 transition-colors"
           @click="emit('close')"
         >
           我知道了
