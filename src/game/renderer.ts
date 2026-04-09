@@ -1,5 +1,4 @@
 import type { CapsuleEntity, VirusEntity, Particle, ScorePopup, Star } from './types';
-import { SIZES } from './types';
 
 /** Canvas 渲染器 */
 export class Renderer {
@@ -11,9 +10,7 @@ export class Renderer {
   /** 预加载的图片资源 */
   private images: Record<string, HTMLImageElement> = {};
 
-  /** 离屏缓存 */
-  private bgCache: OffscreenCanvas | null = null;
-  private bgCacheKey = '';
+  /** 病毒旋转缓存 */
   private virusCache: Map<string, HTMLCanvasElement> = new Map();
 
   /** 背景星星 */
@@ -40,7 +37,6 @@ export class Renderer {
 
     // 重新生成星星
     this.initStars();
-    this.bgCache = null; // 尺寸变了，清缓存
   }
 
   /** 初始化背景星星 */
@@ -230,7 +226,7 @@ export class Renderer {
   }
 
   /** 绘制分数 + 连杀信息 */
-  drawScore(score: number, combo: number, maxCombo: number, level: number): void {
+  drawScore(score: number, combo: number, level: number): void {
     // 分数
     this.ctx.font = 'bold 18px "Microsoft YaHei", sans-serif';
     this.ctx.fillStyle = '#fff';

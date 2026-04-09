@@ -1,9 +1,8 @@
-import type { GameState, GameTimers, DifficultyName, CapsuleEntity, VirusEntity, Particle, ScorePopup, DifficultyConfig } from './types';
+import type { GameState, GameTimers, DifficultyName, CapsuleEntity, VirusEntity, Particle, ScorePopup } from './types';
 import { difficulties, data, audio as audioSrc, images as imageSrcs } from './config';
 import { audioManager } from './audio';
 import { randomInt, clamp, isMobile } from './utils';
 import { Renderer } from './renderer';
-import { SIZES } from './types';
 
 /** 对象池：复用实体对象减少 GC */
 class ObjectPool<T> {
@@ -647,7 +646,7 @@ export class Game {
     for (const v of this.viruses) this.renderer.drawVirus(v);
     this.renderer.drawParticles(this.particles);
     this.renderer.drawScorePopups(this.scorePopups);
-    this.renderer.drawScore(this.score, this.combo, this.maxCombo, this.currentLevel);
+    this.renderer.drawScore(this.score, this.combo, this.currentLevel);
   }
 
   // ======================== 结算 ========================
