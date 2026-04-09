@@ -1,5 +1,5 @@
 <script setup lang="ts" vapor>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps<{
   game: any;
@@ -38,21 +38,9 @@ onUnmounted(() => {
   document.removeEventListener('touchmove', handleTouchMove);
 });
 
-// 向父组件暴露 canvasRef
 defineExpose({ canvasRef });
 </script>
 
 <template>
-  <canvas ref="canvasRef" class="game-canvas"></canvas>
+  <canvas ref="canvasRef" class="absolute top-0 left-0 w-full h-full z-[1]"></canvas>
 </template>
-
-<style scoped>
-.game-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-</style>

@@ -13,12 +13,12 @@ const emit = defineEmits<{
 
 const displayScore = computed(() => props.score * 1000);
 
-const resultClass = computed(() => {
+const scoreColorClass = computed(() => {
   const digits = String(props.score).length;
-  if (digits <= 1) return 'alert-danger';
-  if (digits === 2) return 'alert-warning';
-  if (digits === 3) return 'alert-info';
-  return 'alert-success';
+  if (digits <= 1) return 'text-red-400';
+  if (digits === 2) return 'text-yellow-500';
+  if (digits === 3) return 'text-blue-400';
+  return 'text-green-400';
 });
 
 const message = computed(() => {
@@ -31,94 +31,26 @@ const message = computed(() => {
 </script>
 
 <template>
-  <div class="result-overlay">
-    <div class="result-card" :class="resultClass">
-      <div class="result-score-label">您获得了</div>
-      <div class="result-score">{{ displayScore }}</div>
-      <div class="result-score-unit">分</div>
-      <div class="result-message">{{ message }}</div>
-      <div v-if="maxCombo >= 3" class="result-combo">最高连杀: {{ maxCombo }}</div>
-      <button class="btn btn-lg btn-primary" @click="emit('restart')">继续消灭</button>
+  <div class="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+    <div class="bg-[#1a1a2e] rounded-2xl p-8 text-center max-w-[90%] w-[320px] shadow-2xl">
+      <div class="text-white/70 text-sm mb-2">您获得了</div>
+      <div 
+        class="text-5xl font-bold leading-tight"
+        :class="scoreColorClass"
+      >
+        {{ displayScore }}
+      </div>
+      <div class="text-white/60 text-base mb-4">分</div>
+      <div class="text-white/85 text-sm mb-4">{{ message }}</div>
+      <div v-if="maxCombo >= 3" class="text-yellow-500 text-xs mb-5">
+        最高连杀: {{ maxCombo }}
+      </div>
+      <button 
+        class="w-full py-3.5 border-none rounded-lg text-base font-semibold cursor-pointer transition-transform duration-100 active:scale-[0.98] bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:opacity-90" 
+        @click="emit('restart')"
+      >
+        继续消灭
+      </button>
     </div>
   </div>
 </template>
-
-<style scoped>
-.result-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 10;
-}
-
-.result-card {
-  background: #1a1a2e;
-  border-radius: 16px;
-  padding: 32px;
-  text-align: center;
-  max-width: 90%;
-  width: 320px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-
-.alert-danger .result-score { color: #ff6b6b; }
-.alert-warning .result-score { color: #ffc107; }
-.alert-info .result-score { color: #74c0fc; }
-.alert-success .result-score { color: #51cf66; }
-
-.result-score-label {
-  color: rgba(255,255,255,0.7);
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-.result-score {
-  font-size: 48px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.result-score-unit {
-  color: rgba(255,255,255,0.6);
-  font-size: 16px;
-  margin-bottom: 16px;
-}
-
-.result-message {
-  color: rgba(255,255,255,0.85);
-  font-size: 14px;
-  margin-bottom: 16px;
-}
-
-.result-combo {
-  color: #ffc107;
-  font-size: 12px;
-  margin-bottom: 20px;
-}
-
-.btn {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.1s;
-}
-
-.btn:active {
-  transform: scale(0.98);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-}
-</style>

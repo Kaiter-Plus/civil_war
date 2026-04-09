@@ -1,7 +1,6 @@
 <script setup lang="ts" vapor>
 import { ref } from 'vue';
 import logoImg from '../assets/img/logo.png';
-import { images } from '../game/config';
 
 type Difficulty = 'easy' | 'normal' | 'hard';
 
@@ -24,23 +23,28 @@ function setDifficulty(d: Difficulty) {
 </script>
 
 <template>
-  <div class="menu-screen">
+  <div class="flex flex-col items-center justify-center h-full p-5 gap-5">
     <!-- Logo -->
-    <div class="title">
-      <div class="logo">
-        <img :src="logoImg" alt="全民战疫" class="img-fluid" draggable="false" />
-      </div>
+    <div>
+      <img 
+        :src="logoImg" 
+        alt="全民战疫" 
+        class="w-[280px] max-w-[80vw] select-none" 
+        draggable="false" 
+      />
     </div>
 
     <!-- 难度选择 -->
-    <div class="difficulty-group">
-      <div class="btn-group">
+    <div class="w-4/5 max-w-[320px]">
+      <div class="flex w-full gap-0.5">
         <button
           v-for="d in (['easy', 'normal', 'hard'] as const)"
           :key="d"
           type="button"
-          class="diff-btn"
-          :class="{ 'active-selected': difficulty === d }"
+          class="flex-1 p-2.5 border text-sm cursor-pointer transition-all duration-200"
+          :class="difficulty === d 
+            ? 'bg-green-600 border-green-600 text-white' 
+            : 'bg-white/10 border-white/20 text-white hover:bg-white/20'"
           @click="setDifficulty(d)"
         >
           {{ d === 'easy' ? '简单' : d === 'normal' ? '普通' : '困难' }}
@@ -49,94 +53,37 @@ function setDifficulty(d: Difficulty) {
     </div>
 
     <!-- 按钮组 -->
-    <div class="button-group">
-      <button class="btn btn-success" @click="emit('start')">开始游戏</button>
-      <button class="btn btn-primary" @click="emit('show', 'rules')">查看规则</button>
-      <button class="btn btn-warning" @click="emit('show', 'knowledge')">防疫小知识</button>
-      <button class="btn btn-danger" @click="emit('show', 'rumors')">谣言我先知</button>
-      <button class="btn btn-leaderboard" @click="emit('show', 'leaderboard')">排行榜</button>
+    <div class="flex flex-col w-4/5 max-w-[320px] gap-2.5">
+      <button 
+        class="w-full p-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all duration-100 hover:opacity-90 active:scale-[0.98] bg-green-600 text-white" 
+        @click="emit('start')"
+      >
+        开始游戏
+      </button>
+      <button 
+        class="w-full p-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all duration-100 hover:opacity-90 active:scale-[0.98] bg-blue-600 text-white" 
+        @click="emit('show', 'rules')"
+      >
+        查看规则
+      </button>
+      <button 
+        class="w-full p-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all duration-100 hover:opacity-90 active:scale-[0.98] bg-yellow-500 text-black" 
+        @click="emit('show', 'knowledge')"
+      >
+        防疫小知识
+      </button>
+      <button 
+        class="w-full p-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all duration-100 hover:opacity-90 active:scale-[0.98] bg-red-600 text-white" 
+        @click="emit('show', 'rumors')"
+      >
+        谣言我先知
+      </button>
+      <button 
+        class="w-full p-3 border-none rounded-lg text-base font-medium cursor-pointer transition-all duration-100 hover:opacity-90 active:scale-[0.98] bg-purple-600 text-white" 
+        @click="emit('show', 'leaderboard')"
+      >
+        排行榜
+      </button>
     </div>
   </div>
 </template>
-
-<style scoped>
-.menu-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 20px;
-  gap: 20px;
-}
-
-.title .logo img {
-  width: 280px;
-  max-width: 80vw;
-  user-select: none;
-}
-
-.difficulty-group {
-  width: 80%;
-  max-width: 320px;
-}
-
-.btn-group {
-  display: flex;
-  width: 100%;
-  gap: 2px;
-}
-
-.diff-btn {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.diff-btn:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.diff-btn.active-selected {
-  background: #198754;
-  border-color: #198754;
-}
-
-.button-group {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  max-width: 320px;
-  gap: 10px;
-}
-
-.btn {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: transform 0.1s, opacity 0.2s;
-}
-
-.btn:hover {
-  opacity: 0.9;
-}
-
-.btn:active {
-  transform: scale(0.98);
-}
-
-.btn-success { background: #198754; color: #fff; }
-.btn-primary { background: #0d6efd; color: #fff; }
-.btn-warning { background: #ffc107; color: #000; }
-.btn-danger { background: #dc3545; color: #fff; }
-.btn-leaderboard { background: #6f42c1; color: #fff; }
-</style>

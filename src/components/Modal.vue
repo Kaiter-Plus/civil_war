@@ -10,176 +10,119 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="modal-overlay" @click.self="emit('close')">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5>{{ title }}</h5>
-        <button class="modal-close" @click="emit('close')" aria-label="关闭">&times;</button>
+  <div 
+    class="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000]" 
+    @click.self="emit('close')"
+  >
+    <div class="bg-[#1a1a2e] rounded-xl max-w-[90%] max-h-[80%] w-[400px] overflow-hidden shadow-2xl">
+      <!-- Header -->
+      <div class="flex justify-between items-center p-4 px-5 border-b border-white/10">
+        <h5 class="m-0 text-white text-lg">{{ title }}</h5>
+        <button 
+          class="bg-none border-none text-white/60 text-2xl cursor-pointer leading-none hover:text-white" 
+          @click="emit('close')" 
+          aria-label="关闭"
+        >
+          &times;
+        </button>
       </div>
-      <div class="modal-body" v-html="content"></div>
-      <div class="modal-footer">
-        <button class="btn btn-success" @click="emit('close')">我知道了</button>
+      
+      <!-- Body -->
+      <div 
+        class="p-5 text-white/85 text-sm leading-relaxed max-h-[50vh] overflow-y-auto whitespace-pre-wrap" 
+        v-html="content"
+      ></div>
+      
+      <!-- Footer -->
+      <div class="p-4 px-5 border-t border-white/10 text-center">
+        <button 
+          class="py-2.5 px-8 border-none rounded-md text-sm font-medium cursor-pointer bg-green-600 text-white hover:bg-green-700 transition-colors" 
+          @click="emit('close')"
+        >
+          我知道了
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: #1a1a2e;
-  border-radius: 12px;
-  max-width: 90%;
-  max-height: 80%;
-  width: 400px;
-  overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.modal-header h5 {
-  margin: 0;
-  color: #fff;
-  font-size: 18px;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.6);
-  font-size: 24px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.modal-close:hover {
-  color: #fff;
-}
-
-.modal-body {
-  padding: 20px;
-  color: rgba(255,255,255,0.85);
-  font-size: 14px;
-  line-height: 1.6;
-  max-height: 50vh;
-  overflow-y: auto;
-  white-space: pre-wrap;
-}
-
-.modal-body :deep(.rumor) {
-  color: #ff6b6b;
+/* v-html 内容的深度样式 - 使用原生 CSS 属性 */
+:deep(.rumor) {
+  color: #f87171;
   margin-bottom: 12px;
   padding: 10px;
-  background: rgba(255,107,107,0.1);
+  background: rgba(248, 113, 113, 0.1);
   border-radius: 6px;
 }
 
-.modal-body :deep(.truth) {
-  color: #51cf66;
+:deep(.truth) {
+  color: #4ade80;
   padding: 10px;
-  background: rgba(81,207,102,0.1);
+  background: rgba(74, 222, 128, 0.1);
   border-radius: 6px;
 }
 
-.modal-body :deep(.leaderboard-tabs) {
+:deep(.leaderboard-tabs) {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.modal-body :deep(.lb-section) {
-  background: rgba(255,255,255,0.05);
+:deep(.lb-section) {
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   overflow: hidden;
 }
 
-.modal-body :deep(.lb-title) {
+:deep(.lb-title) {
   color: #fff;
   font-weight: 600;
   padding: 10px 12px;
   text-align: center;
-  background: rgba(255,255,255,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-body :deep(.lb-empty) {
-  color: rgba(255,255,255,0.4);
+:deep(.lb-empty) {
+  color: rgba(255, 255, 255, 0.4);
   text-align: center;
   font-size: 12px;
   padding: 16px;
 }
 
-.modal-body :deep(.lb-list) {
+:deep(.lb-list) {
   font-size: 13px;
 }
 
-.modal-body :deep(.lb-row) {
+:deep(.lb-row) {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.modal-body :deep(.lb-row:last-child) {
+:deep(.lb-row:last-child) {
   border-bottom: none;
 }
 
-.modal-body :deep(.lb-rank) {
+:deep(.lb-rank) {
   width: 28px;
   font-size: 14px;
 }
 
-.modal-body :deep(.lb-score) {
+:deep(.lb-score) {
   flex: 1;
   text-align: center;
-  color: #ffc107;
+  color: #eab308;
   font-weight: 600;
 }
 
-.modal-body :deep(.lb-date) {
+:deep(.lb-date) {
   width: 70px;
   text-align: right;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
   font-size: 11px;
-}
-
-.modal-footer {
-  padding: 16px 20px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  text-align: center;
-}
-
-.btn {
-  padding: 10px 32px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.btn-success {
-  background: #198754;
-  color: #fff;
 }
 </style>

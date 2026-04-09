@@ -15,38 +15,31 @@ const modalContent = ref('');
 const selectedDifficulty = ref<'easy' | 'normal' | 'hard'>('normal');
 
 const gameRef = shallowRef<ReturnType<typeof useGame> | null>(null);
-// 组件实例引用，不是 canvas 元素
 const gameCanvasRef = shallowRef<{ canvasRef: HTMLCanvasElement | null } | null>(null);
 
-// 游戏结果
 const finalScore = ref(0);
 const maxCombo = ref(0);
 
-// 开始游戏
 function startGame() {
   screen.value = 'ready';
-  // 通过组件实例访问内部暴露的 canvasRef
   const canvasEl = gameCanvasRef.value?.canvasRef;
   if (canvasEl && gameRef.value) {
     gameRef.value.beginGame(canvasEl, selectedDifficulty.value);
   }
 }
 
-// 游戏结束回调
 function onGameOver(score: number, combo: number) {
   screen.value = 'over';
   finalScore.value = score;
   maxCombo.value = combo;
 }
 
-// 重新开始
 function restart() {
   screen.value = 'menu';
   finalScore.value = 0;
   maxCombo.value = 0;
 }
 
-// 显示弹窗
 function showInfo(type: 'rules' | 'knowledge' | 'rumors' | 'leaderboard') {
   const data = gameRef.value?.getData();
   if (!data) return;
@@ -104,7 +97,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="game-container">
+  <div class="relative w-full h-full overflow-hidden">
     <!-- 菜单界面 -->
     <MenuScreen
       v-if="screen === 'menu'"
@@ -140,12 +133,3 @@ onMounted(() => {
     />
   </div>
 </template>
-
-<style scoped>
-.game-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-</style>
