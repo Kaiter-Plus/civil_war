@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
   root: 'src',
@@ -9,17 +12,17 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/index.html')
+        main: resolve(__dirname, 'src/index.html'),
       },
       output: {
         assetFileNames: 'assets/[name].[hash][extname]',
         chunkFileNames: 'js/[name].[hash].js',
-        entryFileNames: 'js/[name].[hash].js'
-      }
-    }
+        entryFileNames: 'js/[name].[hash].js',
+      },
+    },
   },
   server: {
     port: 3000,
-    open: true
-  }
+    open: true,
+  },
 })

@@ -1,36 +1,139 @@
-@import 'normalize.css';
-@import 'bootstrap/dist/css/bootstrap.min.css';
+@import "normalize.css";
+
+/* ==================== 基础样式 ==================== */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   overflow: hidden;
-  font-family: microsoft yahei, sans-serif;
+  font-family: "Microsoft YaHei", sans-serif;
 }
 
 /* 游戏容器 */
 #stage {
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  position: absolute;
+  position: relative;
   overflow: hidden;
   border: 10px solid #f0f0f0;
   padding: 0;
 }
 
-/* ready go! */
-#stage > #ready {
-  user-select: none;
-  text-align: center;
-  font-size: 1em;
-  color: red;
-  z-index: 10;
+/* 游戏画布 */
+#stage canvas {
   position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
+/* 菜单层级在 canvas 之上 */
+#stage > .title,
+#stage > .difficultyGroup,
+#stage > .buttonGroup,
+#stage > .result-overlay {
+  position: relative;
+  z-index: 2;
+}
+
+#stage > .title {
+  margin-bottom: 20px;
+}
+
+#stage > .title img {
+  max-width: 280px;
+  width: 100%;
+}
+
+#stage > .difficultyGroup {
+  margin-bottom: 20px;
+}
+
+#stage > .buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ==================== 按钮样式 ==================== */
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-success {
+  background: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+.btn-primary {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+.btn-warning {
+  background: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+}
+.btn-danger {
+  background: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+.btn-outline-light {
+  background: transparent;
+  border-color: #f8f9fa;
+  color: #f8f9fa;
+}
+.btn-outline-light:hover,
+.btn-outline-light.active-selected {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* ==================== 菜单 ==================== */
+
 /* 难度选择 */
+.difficultyGroup {
+  width: 66.666667%;
+}
+
 .difficultyGroup .btn-group {
   display: flex;
   gap: 8px;
@@ -41,6 +144,7 @@ body {
   flex: 1;
   border-radius: 6px !important;
   transition: all 0.2s;
+  padding: 8px 16px;
 }
 
 .diff-btn.active-selected {
@@ -52,97 +156,305 @@ body {
 
 /* 按键 */
 #stage .buttonGroup a {
-  margin-top: 30px;
   width: 100%;
+  text-decoration: none;
 }
 
-/* 救护车 */
-#stage .ambulance {
-  width: 30px;
-  height: 64px;
-  position: absolute;
-  background: url('../img/ambulance.png') center no-repeat;
-  background-size: auto;
-  z-index: 3;
-  will-change: left, top;
-}
+/* ==================== 自定义 Modal ==================== */
 
-/* 胶囊 */
-#stage .capsule {
-  width: 14px;
-  height: 26px;
-  background: url('../img/capsule.png');
-  position: absolute;
-  z-index: 2;
-}
-
-/* 病毒 */
-#stage .virus {
-  width: 64px;
-  height: 64px;
-  background: url('../img/virus.png');
-  position: absolute;
-  transform: rotate(0);
-  animation: virusRotate 2s linear infinite;
-  -webkit-animation: virusRotate 2s linear infinite;
-  z-index: 3;
-}
-
-/* 分数 */
-#stage .score {
-  width: 220px;
-  height: 30px;
-  line-height: 30px;
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  color: #fff;
-  font-weight: bold;
-  padding-left: 5px;
-  font-size: 16px;
-  z-index: 5;
-}
-
-#stage .score.none {
-  display: none;
-}
-
-/* 结算 */
-#stage .tips {
-  text-align: center;
-  line-height: 40px;
-  padding: 10px;
-  z-index: 4;
-}
-
-/* 结算信息 */
-#stage .tips p {
-  text-align: center;
-  cursor: pointer;
-}
-
-/* 结算信息分数样式 */
-#stage .tips .s {
-  padding: 2px 10px;
-  font-weight: bold;
-  color: blue;
-}
-
-/* 高斯模糊背景 */
-.mask_bg {
-  position: absolute;
-  height: 100%;
-  width: 100%;
+.game-modal-overlay {
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: -2;
-  background: url('../img/bg.jpeg') no-repeat 0 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: modalFadeIn 0.2s ease;
+}
+
+.game-modal {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideUp 0.25s ease;
+}
+
+.game-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+}
+
+.game-modal-header h5 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.game-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0 4px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.game-modal-close:hover {
+  color: #000;
+  background: #e9ecef;
+}
+
+.game-modal-body {
+  padding: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.8;
+  font-size: 15px;
+  color: #495057;
+}
+
+.game-modal-body .rumor {
+  background: #f8d7da;
+  color: #842029;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border-left: 4px solid #f5c2c7;
+}
+
+.game-modal-body .truth {
+  background: #d1e7dd;
+  color: #0f5132;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid #badbcc;
+}
+
+.game-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  border-top: 1px solid #e9ecef;
+  background: #f8f9fa;
+}
+
+/* ==================== 结算面板 ==================== */
+
+.result-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  animation: resultFadeIn 0.4s ease;
+}
+
+.result-card {
+  text-align: center;
+  padding: 40px 50px;
+  border-radius: 16px;
+  max-width: 360px;
+  width: 85%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: resultScaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.result-card.alert-success {
+  background: linear-gradient(135deg, #d1e7dd 0%, #badbcc 100%);
+}
+.result-card.alert-warning {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffecb5 100%);
+}
+.result-card.alert-info {
+  background: linear-gradient(135deg, #cff4fc 0%, #b6effb 100%);
+}
+.result-card.alert-danger {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+}
+
+.result-score-label {
+  font-size: 16px;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+.result-score {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.result-card.alert-success .result-score {
+  color: #0f5132;
+}
+.result-card.alert-warning .result-score {
+  color: #664d03;
+}
+.result-card.alert-info .result-score {
+  color: #055160;
+}
+.result-card.alert-danger .result-score {
+  color: #842029;
+}
+
+.result-score-unit {
+  font-size: 18px;
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.result-message {
+  font-size: 15px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.result-card.alert-success .result-message {
+  color: #0f5132;
+}
+.result-card.alert-warning .result-message {
+  color: #664d03;
+}
+.result-card.alert-info .result-message {
+  color: #055160;
+}
+.result-card.alert-danger .result-message {
+  color: #842029;
+}
+
+.result-restart-btn {
+  padding: 12px 48px;
+  font-size: 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s;
+}
+
+.result-restart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.result-restart-btn:active {
+  transform: translateY(0);
+}
+
+/* ==================== 动画 ==================== */
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes resultFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes resultScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==================== 背景 ==================== */
+
+.mask_bg {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: url("../img/bg.jpeg") no-repeat center center;
   background-size: cover;
   filter: blur(15px) grayscale(0.3);
 }
 
-/* 动画 */
-@keyframes virusRotate {
-  from { transform: rotate(0); }
-  to { transform: rotate(360deg); }
+/* ==================== 响应式 ==================== */
+
+.col-8 {
+  width: 66.666667%;
+}
+.col-12 {
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .col-xl-4 {
+    width: 33.333333%;
+  }
+  .offset-xl-4 {
+    margin-left: 33.333333%;
+  }
+}
+
+.container-fluid {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+.w-100 {
+  width: 100%;
+}
+.img-fluid {
+  max-width: 100%;
+  height: auto;
 }

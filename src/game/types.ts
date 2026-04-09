@@ -14,20 +14,10 @@ export interface DifficultyConfig {
   label: string;
 }
 
-/** 游戏定时器 */
+/** 游戏定时器（菜单阶段用） */
 export interface GameTimers {
-  capsule: ReturnType<typeof setInterval> | null;
-  virus: ReturnType<typeof setInterval> | null;
+  ready: ReturnType<typeof setInterval> | null;
   backgroundMusic: ReturnType<typeof setTimeout> | null;
-  startGame: ReturnType<typeof setTimeout> | null;
-}
-
-/** 谣言条目 */
-export interface RumorEntry {
-  /** 谣言内容 */
-  rumor: string;
-  /** 真相 */
-  truth: string;
 }
 
 /** 结算等级 */
@@ -35,3 +25,53 @@ export type ResultLevel = 0 | 1 | 2 | 3;
 
 /** 游戏状态 */
 export type GameState = 'menu' | 'ready' | 'playing' | 'over';
+
+/** 难度名称 */
+export type DifficultyName = 'easy' | 'normal' | 'hard';
+
+/** 胶囊实体 */
+export interface CapsuleEntity {
+  x: number;
+  y: number;
+  /** 向上飞行速度 (px/ms) */
+  vy: number;
+  active: boolean;
+}
+
+/** 病毒实体 */
+export interface VirusEntity {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  /** 水平漂移速度 (px/ms) */
+  vx: number;
+  /** 垂直下落速度 (px/ms) */
+  vy: number;
+  /** 旋转角度 (弧度) */
+  rotation: number;
+  /** 旋转速度 (弧度/ms) */
+  rotationSpeed: number;
+  active: boolean;
+  /** 被击杀后的显示计时 */
+  killedAt: number | null;
+}
+
+/** 粒子效果 */
+export interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  maxLife: number;
+  size: number;
+  color: string;
+}
+
+/** 游戏实体尺寸常量 */
+export const SIZES = {
+  ambulance: { width: 30, height: 64 },
+  capsule: { width: 14, height: 26 },
+  virus: { width: 64, height: 64 },
+} as const;

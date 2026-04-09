@@ -1,9 +1,8 @@
-/// <reference path="./shims.d.ts" />
+// CSS
 import '../css/index.css';
-import 'bootstrap/js/dist/modal';
+
+// Game
 import { Game } from './game';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const game = new Game('stage');
-  game.start();
-});
+const game = new Game('stage');
+game.start();
